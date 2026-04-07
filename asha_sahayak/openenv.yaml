@@ -1,0 +1,11 @@
+spec_version: 1
+name: asha_sahayak
+description: >
+  AI clinical decision support for ASHA (Accredited Social Health Activist) workers
+  in rural India. Multi-turn triage agent backed by official Indian Government IMNCI
+  protocol — helping frontline health workers make correct referral decisions for
+  maternal, neonatal, and childhood illnesses.
+type: space
+runtime: fastapi
+app: asha_sahayak.server.app:app
+port: 7860
