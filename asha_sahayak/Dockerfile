@@ -3,7 +3,7 @@ FROM python:3.10-slim
 WORKDIR /app
 
 # Install dependencies
-RUN pip install --no-cache-dir fastapi uvicorn pydantic openai httpx gradio openenv-core
+RUN pip install --no-cache-dir fastapi uvicorn pydantic openai httpx "gradio==6.10.0" openenv-core
 
 # The HF Space repo root contains all files from asha_sahayak/ directly.
 # We copy them into a subdirectory so 'import asha_sahayak' works.
