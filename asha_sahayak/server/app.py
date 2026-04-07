@@ -231,8 +231,9 @@ try:
     from .gradio_ui import build_gradio_app
     _gradio_app = build_gradio_app()
     app = gr.mount_gradio_app(app, _gradio_app, path="/ui")
+    print("[INFO] Gradio UI mounted at /ui", flush=True)
 except Exception as _gradio_err:
-    pass  # Gradio optional — API still works without it
+    print(f"[WARN] Gradio UI not available: {_gradio_err}", flush=True)
 
 
 def main() -> None:
