@@ -5,12 +5,14 @@ WORKDIR /app
 # Install dependencies
 RUN pip install --no-cache-dir fastapi uvicorn pydantic openai httpx "gradio==6.10.0" openenv-core
 
-# The HF Space repo root contains all files from asha_sahayak/ directly.
-# We copy them into a subdirectory so 'import asha_sahayak' works.
+# Copy repo contents into /app/asha_sahayak/ so 'import asha_sahayak' resolves
 COPY . /app/asha_sahayak/
 
-# Install the package in editable mode
+# Install the package
 RUN pip install --no-cache-dir -e /app/asha_sahayak/
+
+# Ensure asha_sahayak is importable regardless of working directory
+ENV PYTHONPATH=/app
 
 EXPOSE 7860
 
