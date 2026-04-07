@@ -70,6 +70,20 @@ class StateOut(BaseModel):
 # App + single environment instance per connection
 # ---------------------------------------------------------------------------
 
+from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request as StarletteRequest
+
+class ForceHTTPSMiddleware(BaseHTTPMiddleware):
+    """Rewrites http:// URLs to https:// in redirects when behind HF proxy."""
+    async def dispatch(self, request: StarletteRequest, call_next):
+        response = await call_next(request)
+        if response.status_code in (301, 302, 307, 308):
+            location = response.headers.get("location", "")
+            if location.startswith("http://"):
+                response.headers["location"] = "https://" + location[len("http://"):]
+        return response
+
 app = FastAPI(
     title="ASHA Sahayak",
     description=(
@@ -78,6 +92,8 @@ app = FastAPI(
     ),
     version="0.1.0",
 )
+
+app.add_middleware(ForceHTTPSMiddleware)
 
 # Module-level environment (one instance per server process)
 _env: AshaEnvironment = AshaEnvironment()
