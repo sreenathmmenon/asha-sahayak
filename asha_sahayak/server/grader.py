@@ -223,6 +223,34 @@ def _score_primary_concern(predicted: str, correct: str) -> float:
     if pred_lower == corr_lower:
         return 1.0
 
+    # Semantic aliases: common equivalent phrasings → score override
+    # Keys are (predicted_norm_contains, correct_norm) → score
+    _CONCERN_ALIASES: list[tuple[set[str], str, float]] = [
+        # very_severe_febrile_disease_possible_meningitis aliases
+        ({"meningitis", "severe_febrile_disease", "bacterial_meningitis", "viral_meningitis",
+          "meningococcal_meningitis", "meningitis_signs", "possible_meningitis",
+          "severe_febrile_illness_meningitis", "febrile_meningitis"},
+         "very_severe_febrile_disease_possible_meningitis", 0.8),
+        # pre_eclampsia_severe_features aliases
+        ({"pre_eclampsia", "severe_pre_eclampsia", "preeclampsia", "eclampsia_risk",
+          "pre_eclampsia_severe", "severe_preeclampsia"},
+         "pre_eclampsia_severe_features", 0.8),
+        # neonatal_hypothermia_with_sepsis_risk aliases
+        ({"neonatal_hypothermia", "hypothermia_sepsis", "neonatal_cold_sepsis"},
+         "neonatal_hypothermia_with_sepsis_risk", 0.8),
+        # severe_complicated_sam aliases
+        ({"severe_sam", "complicated_sam", "severe_malnutrition", "sam_complications",
+          "severe_acute_malnutrition"},
+         "severe_complicated_sam", 0.8),
+        # omphalitis_with_systemic_spread aliases
+        ({"omphalitis", "cord_infection_sepsis", "neonatal_omphalitis"},
+         "omphalitis_with_systemic_spread", 0.8),
+    ]
+    for alias_set, target_correct, alias_score in _CONCERN_ALIASES:
+        if corr_lower == target_correct.replace("-", "_"):
+            if pred_lower in alias_set or any(a in pred_lower for a in alias_set):
+                return alias_score
+
     # Extract key clinical keywords from correct concern
     correct_keywords = set(corr_lower.split("_"))
     predicted_keywords = set(pred_lower.split("_"))

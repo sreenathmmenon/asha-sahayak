@@ -95,10 +95,28 @@ When asking a clarifying question (not yet deciding), respond with ONLY:
   "confidence": 0.5
 }
 
+IMNCI PRIMARY CONCERN IDENTIFIERS (use these exact terms):
+  severe_pneumonia              → chest indrawing present
+  pneumonia_no_severe_signs     → fast breathing, NO chest indrawing
+  very_severe_febrile_disease_possible_meningitis → fever + stiff neck / bulging fontanelle / petechial rash
+  eclampsia                     → seizure in pregnancy
+  pre_eclampsia_severe_features → severe headache + blurred vision + high BP (no seizure yet)
+  postpartum_hemorrhage         → heavy bleeding after delivery
+  antepartum_haemorrhage_shock  → bleeding in pregnancy + shock signs
+  neonatal_sepsis               → fever/lethargy in neonate <28 days
+  neonatal_hypothermia_with_sepsis_risk → cold baby <35°C + danger signs
+  omphalitis_with_systemic_spread → cord pus + spreading redness + systemic signs
+  severe_complicated_sam        → MUAC <11.5 + bilateral edema OR complications
+  moderate_acute_malnutrition   → MUAC 11.5-12.5, no edema, passes appetite test
+  severe_dehydration_with_lethargy → lethargy + sunken eyes + cannot drink
+  some_dehydration              → restless + sunken eyes + drinks eagerly
+  diarrhea_no_dehydration       → diarrhea, alert, drinking normally
+  presumptive_tuberculosis      → cough ≥2 weeks + weight loss / hemoptysis
+
 IMPORTANT:
 - action_items must be structured tags (e.g. "transport_to_phc") — NO drug names or dosages
 - Ask at least 1 clarifying question before giving a final decision
-- primary_concern should be a snake_case clinical identifier
+- primary_concern MUST be one of the IMNCI identifiers listed above — use exact snake_case
 - For thin/not-eating children ALWAYS ask about MUAC measurement and bilateral foot oedema
 - For fever cases ALWAYS ask about stiff neck and consciousness level
 - Keep questions focused on key danger signs
