@@ -20,27 +20,13 @@ from __future__ import annotations
 
 import json
 import os
-import sys
 import textwrap
 import time
 from typing import Any, Dict, List, Optional
 
 from openai import OpenAI
 
-# Support both installed-package and direct-from-repo-root execution.
-# When the validator runs `python inference.py` from the repo root,
-# `asha_sahayak` is not a subdirectory — the repo root IS the package.
-try:
-    from asha_sahayak.client import AshaClient
-except ModuleNotFoundError:
-    # Running from repo root — add parent directory so imports resolve
-    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    try:
-        from asha_sahayak.client import AshaClient
-    except ModuleNotFoundError:
-        # Repo root IS the package — add it directly
-        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-        from client import AshaClient  # type: ignore[no-redef]
+from asha_sahayak.client import AshaClient
 
 # ---------------------------------------------------------------------------
 # Configuration

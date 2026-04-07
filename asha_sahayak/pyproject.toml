@@ -13,16 +13,12 @@ dependencies = [
     "uvicorn>=0.24.0",
     "pydantic>=2.0.0",
     "openai>=1.0.0",
+    "httpx>=0.24.0",
 ]
 
 [project.optional-dependencies]
-server = [
-    "fastapi>=0.104.0",
-    "uvicorn>=0.24.0",
-]
 dev = [
     "pytest>=7.0.0",
-    "httpx>=0.24.0",
 ]
 
 [project.scripts]
@@ -31,5 +27,5 @@ server = "asha_sahayak.server.app:main"
 [tool.hatch.build.targets.wheel]
 packages = ["asha_sahayak"]
 
-[tool.hatch.build.targets.wheel.sources]
-"asha_sahayak" = "asha_sahayak"
+[tool.pytest.ini_options]
+testpaths = ["asha_sahayak/tests"]
