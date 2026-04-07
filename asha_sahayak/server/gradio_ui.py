@@ -50,7 +50,7 @@ def reset_episode(task_id: str, seed: int) -> Tuple[List, str, str]:
     )
 
     first_msg = obs.conversation[0].text
-    history = [(None, f"**ASHA Worker:** {first_msg}")]
+    history = [{"role": "assistant", "content": f"**ASHA Worker:** {first_msg}"}]
     status = f"Turn 1/{obs.max_turns} | Episode started"
     return history, status, context_text
 
@@ -86,21 +86,17 @@ def submit_action(action_json: str, history: List) -> Tuple[List, str, str, str]
     _ui_obs = _obs_to_dict(obs)
 
     if action.question:
-        agent_msg = f"**Agent asks:** {action.question}"
+        history.append({"role": "user", "content": f"**Agent asks:** {action.question}"})
     else:
-        agent_msg = f"**Agent decides:** {action.referral_decision} | {action.urgency} | {action.primary_concern}"
+        history.append({"role": "user", "content": f"**Agent decides:** {action.referral_decision} | {action.urgency} | {action.primary_concern}"})
 
     conv = obs.conversation
     if obs.done:
-        asha_reply = f"**Episode Complete — Score: {obs.reward:.3f}**\n\n{obs.feedback or ''}"
-        history.append((agent_msg, asha_reply))
+        history.append({"role": "assistant", "content": f"**Episode Complete — Score: {obs.reward:.3f}**\n\n{obs.feedback or ''}"})
         return history, f"Done! Final score: {obs.reward:.3f}", obs.feedback or "", action_json
 
     if conv and conv[-1].role == "asha_worker":
-        asha_reply = f"**ASHA Worker:** {conv[-1].text}"
-    else:
-        asha_reply = ""
-    history.append((agent_msg, asha_reply))
+        history.append({"role": "assistant", "content": f"**ASHA Worker:** {conv[-1].text}"})
 
     return history, f"Turn {obs.turn_number}/{obs.max_turns} | Step reward: {obs.reward:.3f}", "", action_json
 
