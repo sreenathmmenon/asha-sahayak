@@ -27,39 +27,43 @@ from typing import Any, Dict, List, Optional
 import httpx
 from openai import OpenAI
 
-try:
-    from asha_sahayak.client import AshaClient
-except ModuleNotFoundError:
-    class AshaClient:  # type: ignore[no-redef]
-        """Inline fallback client — used when package is not installed."""
 
-        def __init__(self, base_url: str = "http://localhost:7860", timeout: float = 30.0):
-            self.base_url = base_url.rstrip("/")
-            self._client = httpx.Client(timeout=timeout)
+class AshaClient:
+    """HTTP client for the ASHA Sahayak environment server."""
 
-        def reset(self, task_id: str = "easy", seed: int = 42) -> Dict[str, Any]:
-            resp = self._client.post(f"{self.base_url}/reset", json={"task_id": task_id, "seed": seed})
-            resp.raise_for_status()
-            return resp.json()["observation"]
+    def __init__(self, base_url: str = "http://localhost:7860", timeout: float = 30.0):
+        self.base_url = base_url.rstrip("/")
+        self._client = httpx.Client(timeout=timeout)
 
-        def step(self, referral_decision: str = "PENDING", urgency: str = "monitor",
-                 primary_concern: str = "", action_items: Optional[List[str]] = None,
-                 question: Optional[str] = None, confidence: float = 0.8) -> Dict[str, Any]:
-            resp = self._client.post(f"{self.base_url}/step", json={
-                "referral_decision": referral_decision, "urgency": urgency,
-                "primary_concern": primary_concern, "action_items": action_items or [],
-                "question": question, "confidence": confidence,
-            })
-            resp.raise_for_status()
-            return resp.json()["observation"]
+    def reset(self, task_id: str = "easy", seed: int = 42) -> Dict[str, Any]:
+        resp = self._client.post(f"{self.base_url}/reset", json={"task_id": task_id, "seed": seed})
+        resp.raise_for_status()
+        return resp.json()["observation"]
 
-        def health(self) -> str:
-            resp = self._client.get(f"{self.base_url}/health")
-            resp.raise_for_status()
-            return resp.json().get("status", "healthy")
+    def step(self, referral_decision: str = "PENDING", urgency: str = "monitor",
+             primary_concern: str = "", action_items: Optional[List[str]] = None,
+             question: Optional[str] = None, confidence: float = 0.8) -> Dict[str, Any]:
+        resp = self._client.post(f"{self.base_url}/step", json={
+            "referral_decision": referral_decision, "urgency": urgency,
+            "primary_concern": primary_concern, "action_items": action_items or [],
+            "question": question, "confidence": confidence,
+        })
+        resp.raise_for_status()
+        return resp.json()["observation"]
 
-        def close(self):
-            self._client.close()
+    def health(self) -> str:
+        resp = self._client.get(f"{self.base_url}/health")
+        resp.raise_for_status()
+        return resp.json().get("status", "healthy")
+
+    def close(self):
+        self._client.close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        self.close()
 
 # ---------------------------------------------------------------------------
 # Configuration
