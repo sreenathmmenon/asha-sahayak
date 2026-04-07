@@ -18,6 +18,9 @@ tags:
 
 # ASHA Sahayak — AI Clinical Decision Support for Frontline Health Workers
 
+> **Live Demo:** [https://sreenathmmenon-asha-sahayak.hf.space/ui/](https://sreenathmmenon-asha-sahayak.hf.space/ui/)
+> **API:** [https://sreenathmmenon-asha-sahayak.hf.space/health](https://sreenathmmenon-asha-sahayak.hf.space/health)
+
 > *"There are 1.07 million ASHA workers in India. They are the healthcare infrastructure for 600 million people. They currently make life-or-death decisions with a printed booklet and no connectivity support."*
 
 **ASHA Sahayak** is a multi-turn reinforcement learning environment that trains AI agents to assist ASHA (Accredited Social Health Activist) workers in rural India make correct clinical referral decisions — backed by the official Indian Government IMNCI protocol.
