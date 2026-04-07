@@ -109,6 +109,12 @@ def _obs_to_dict(obs) -> Dict[str, Any]:
 # Routes
 # ---------------------------------------------------------------------------
 
+@app.get("/")
+def root():
+    from fastapi.responses import RedirectResponse
+    return RedirectResponse(url="/ui")
+
+
 @app.get("/health")
 def health() -> Dict[str, Any]:
     return {"status": "healthy"}
