@@ -122,7 +122,7 @@ def grade_action(
     # Terminal bonus: perfect referral + asked a question = reward thoroughness
     if r_ref == 1.0 and asked_any_question:
         composite += 0.05
-    composite = max(0.0, min(1.0, composite))
+    composite = max(0.001, min(0.999, composite))
 
     # --- Feedback message ---
     fb = _build_feedback(
