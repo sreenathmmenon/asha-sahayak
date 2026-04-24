@@ -9,3 +9,7 @@ type: space
 runtime: fastapi
 app: asha_sahayak.server.app:app
 port: 7860
+themes:
+  - multi_agent_interactions
+  - world_modeling_professional_tasks
+  - self_improvement

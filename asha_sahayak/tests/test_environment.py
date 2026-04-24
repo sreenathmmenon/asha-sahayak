@@ -118,9 +118,9 @@ def test_reward_bounds_all_tasks():
 
 def test_perfect_score_on_correct_answer():
     """Agent that asks a question then gives the exact correct answer gets >= 0.9."""
-    case = ALL_CASES["E01"]  # Severe pneumonia
     env = AshaEnvironment()
     env.reset(task_id="easy", seed=42)
+    case = env._case  # use whatever case was selected for this seed
     env.step(AshaAction(
         referral_decision="PENDING", urgency="unknown",
         primary_concern="info", question="Does the child have chest indrawing?", confidence=0.5

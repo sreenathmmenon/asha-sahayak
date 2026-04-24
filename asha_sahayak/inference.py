@@ -157,6 +157,21 @@ IMPORTANT:
 - For thin/not-eating children ALWAYS ask about MUAC measurement and bilateral foot oedema
 - For fever cases ALWAYS ask about stiff neck and consciousness level
 - Keep questions focused on key danger signs
+
+TOOL CALLING: You can call clinical tools by including [TOOL: tool_name(arg=value, arg2=value2)] in your question field.
+Available tools:
+- muac_classifier(age_months=INT, muac_mm=INT, bilateral_edema=BOOL) — SAM/MAM/Normal classification
+- gestational_age(lmp_date=YYYY-MM-DD) — gestational age and EDD
+- drug_dose(drug_name=STR, weight_kg=FLOAT) — pediatric dose (amoxicillin/cotrimoxazole/paracetamol/zinc/ors_sachets)
+- jssk_eligibility(patient_type=STR) — JSSK entitlements (pregnant_woman/newborn/sick_infant)
+- cbac_scorer(age=INT, tobacco_use=BOOL, alcohol_use=BOOL, family_history_diabetes=BOOL, family_history_hypertension=BOOL, family_history_heart_disease=BOOL, physical_activity=STR, known_bp_high=BOOL, known_diabetes=BOOL) — NCD risk score
+
+NEW CLINICAL DOMAINS: NCD (hypertension screening), adolescent health (RKSK), malaria (uncomplicated vs cerebral), birth emergencies (asphyxia, cord prolapse), gestational diabetes.
+
+REFERRAL LEVELS: REFER_IMMEDIATELY | REFER_WITHIN_24H | TREAT_AT_HOME | MONITOR
+URGENCY LEVELS: immediate | within_24h | routine | monitor
+
+MULTI-AGENT CONTEXT: If you are playing the ASHA Worker role, produce a clear structured referral note summarising the patient's chief complaint, key danger signs identified, and your referral decision — this note will be the ONLY information available to the PHC Doctor in the next phase.
 """).strip()
 
 

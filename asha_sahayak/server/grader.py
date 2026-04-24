@@ -245,6 +245,37 @@ def _score_primary_concern(predicted: str, correct: str) -> float:
         # omphalitis_with_systemic_spread aliases
         ({"omphalitis", "cord_infection_sepsis", "neonatal_omphalitis"},
          "omphalitis_with_systemic_spread", 0.8),
+        # New cases (Phase 3)
+        ({"physiological_jaundice", "neonatal_jaundice_physiological", "normal_newborn_jaundice"},
+         "neonatal_physiological_jaundice", 0.8),
+        ({"localized_pustules", "skin_infection_pustules", "neonatal_skin_pustules"},
+         "localized_skin_pustules", 0.8),
+        ({"malaria_uncomplicated", "simple_malaria", "rdt_positive_malaria", "plasmodium_malaria"},
+         "uncomplicated_malaria", 0.8),
+        ({"pathological_jaundice", "early_onset_jaundice", "hemolytic_jaundice", "jaundice_24h"},
+         "neonatal_pathological_jaundice", 0.8),
+        ({"gestational_diabetes", "gdm", "diabetes_pregnancy", "gdm_risk"},
+         "gestational_diabetes_risk", 0.8),
+        ({"severe_anemia_pregnancy", "pregnancy_anemia", "anaemia_pregnancy", "maternal_severe_anaemia"},
+         "severe_anaemia_in_pregnancy", 0.8),
+        ({"tb_contact", "child_tb", "pediatric_tuberculosis", "tb_exposure_child", "tuberculosis_child"},
+         "pediatric_tb_contact", 0.8),
+        ({"hypertension_ncd", "ncd_screening", "bp_risk", "cbac_referral", "hypertension_risk"},
+         "ncd_hypertension_screening", 0.8),
+        ({"birth_asphyxia", "neonatal_asphyxia", "perinatal_asphyxia", "baby_not_breathing"},
+         "neonatal_birth_asphyxia", 0.8),
+        ({"kernicterus", "bilirubin_encephalopathy", "severe_jaundice_neonate", "jaundice_brain"},
+         "severe_neonatal_jaundice_kernicterus", 0.8),
+        ({"postpartum_sepsis", "puerperal_infection", "postpartum_infection", "postpartum_fever_sepsis"},
+         "puerperal_sepsis", 0.8),
+        ({"adolescent_anaemia", "rksk_anaemia", "severe_anaemia_girl", "menorrhagia_anaemia"},
+         "adolescent_severe_anaemia_with_cardiac_signs", 0.8),
+        ({"cerebral_malaria", "severe_malaria_cns", "malaria_unconscious", "falciparum_cerebral"},
+         "cerebral_malaria_falciparum", 0.8),
+        ({"cord_prolapse", "umbilical_prolapse", "prolapsed_cord"},
+         "cord_prolapse_obstetric_emergency", 0.8),
+        ({"low_birth_weight", "lbw_preterm", "preterm_kmc", "kmc_lbw"},
+         "preterm_low_birth_weight_kmc", 0.8),
     ]
     for alias_set, target_correct, alias_score in _CONCERN_ALIASES:
         if corr_lower == target_correct.replace("-", "_"):
@@ -345,3 +376,55 @@ def _build_feedback(
         lines.append(f"Key danger signs in this case: {', '.join(case.key_danger_signs)}")
 
     return "\n".join(lines)
+
+
+def grade_doctor_action(
+    disposition: str,
+    case: ClinicalCase,
+    asha_score: float,
+) -> float:
+    """
+    Score the PHC Doctor's disposition decision.
+
+    Rules:
+    - REFER_IMMEDIATELY cases → correct doctor decision is "refer_to_fru"
+    - REFER_WITHIN_24H cases → "manage_at_phc" or "refer_to_fru" both acceptable
+    - TREAT_AT_HOME/MONITOR cases → "manage_at_phc" is correct
+
+    Returns a score 0.001-0.999.
+    """
+    disposition_norm = disposition.lower().strip()
+    correct = getattr(case, 'correct_doctor_decision', 'manage_at_phc')
+
+    # Direct match
+    if disposition_norm == correct:
+        base = 1.0
+    elif case.correct_referral == "REFER_IMMEDIATELY":
+        # Must refer to FRU — staying at PHC is dangerous
+        if disposition_norm == "refer_to_fru":
+            base = 1.0
+        elif disposition_norm == "refer_to_district":
+            base = 0.8  # over-referring is safer than under-referring
+        else:  # manage_at_phc
+            base = 0.1  # dangerous undertriage
+    elif case.correct_referral == "REFER_WITHIN_24H":
+        # Either manage at PHC or refer to FRU is acceptable
+        if disposition_norm in ("manage_at_phc", "refer_to_fru"):
+            base = 1.0
+        else:
+            base = 0.5
+    else:
+        # TREAT_AT_HOME or MONITOR — PHC can manage
+        if disposition_norm == "manage_at_phc":
+            base = 1.0
+        elif disposition_norm == "refer_to_fru":
+            base = 0.5  # unnecessary referral
+        else:
+            base = 0.3
+
+    # Doctor score is influenced by ASHA's score (information quality)
+    # Poor ASHA handoff = harder for doctor to make good decision
+    asha_weight = 0.85 + 0.15 * asha_score
+    score = base * asha_weight
+
+    return max(0.001, min(0.999, score))

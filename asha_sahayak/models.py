@@ -47,6 +47,17 @@ class AshaAction(Action):
     confidence: float = 0.8
 
 
+class PHCDoctorAction(Action):
+    """Action taken by the PHC Doctor in the second phase of a multi-agent episode."""
+
+    model_config = {"extra": "allow", "validate_assignment": True, "arbitrary_types_allowed": True}
+
+    disposition: str = "manage_at_phc"  # manage_at_phc | refer_to_fru | refer_to_district
+    investigations: List[str] = []      # rapid_malaria_test | blood_smear | chest_xray | blood_transfusion | etc.
+    treatment: str = ""                 # treatment rationale
+    rationale: str = ""                 # clinical reasoning
+
+
 # ---------------------------------------------------------------------------
 # Nested types used inside Observation
 # ---------------------------------------------------------------------------

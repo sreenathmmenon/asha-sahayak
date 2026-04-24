@@ -5,12 +5,16 @@ OpenEnv-compatible HTTP server for the ASHA clinical decision support environmen
 
 from __future__ import annotations
 
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+import threading
+import uuid
 from typing import Any, Dict, List, Optional
+
 import traceback
+from fastapi import FastAPI, HTTPException, Header
+from pydantic import BaseModel
 
 from .asha_environment import AshaEnvironment
+from .multi_agent_env import MultiAgentAshaEnvironment
 from ..models import AshaAction
 
 # ---------------------------------------------------------------------------
@@ -20,6 +24,7 @@ from ..models import AshaAction
 class ResetRequest(BaseModel):
     task_id: str = "easy"
     seed: int = 42
+    session_id: Optional[str] = None
 
 
 class ActionRequest(BaseModel):
@@ -67,7 +72,7 @@ class StateOut(BaseModel):
 
 
 # ---------------------------------------------------------------------------
-# App + single environment instance per connection
+# App + session-scoped environments
 # ---------------------------------------------------------------------------
 
 from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
@@ -95,8 +100,16 @@ app = FastAPI(
 
 app.add_middleware(ForceHTTPSMiddleware)
 
-# Module-level environment (one instance per server process)
-_env: AshaEnvironment = AshaEnvironment()
+# Session registry — maps session_id -> AshaEnvironment
+_sessions: dict[str, AshaEnvironment] = {}
+_lock = threading.Lock()
+
+# Multi-agent session registry
+_multi_sessions: dict[str, MultiAgentAshaEnvironment] = {}
+
+# Default session id for backward-compatible headerless /step calls.
+# Updated on every /reset so the most-recently-reset session is the fallback.
+_default_session_id: Optional[str] = None
 
 
 def _obs_to_dict(obs) -> Dict[str, Any]:
@@ -145,9 +158,10 @@ def metadata() -> Dict[str, Any]:
             "Multi-turn triage RL environment backed by official Indian Government IMNCI protocol."
         ),
         "version": "0.1.0",
-        "supports_concurrent_sessions": False,
+        "supports_concurrent_sessions": True,
+        "max_concurrent_sessions": 64,
         "tasks": ["easy", "medium", "hard"],
-        "num_cases": 16,
+        "num_cases": 31,
     }
 
 
@@ -185,24 +199,48 @@ def schema() -> Dict[str, Any]:
 
 
 @app.post("/reset")
-def reset(request: ResetRequest = None) -> Dict[str, Any]:
-    """Start a new episode. Returns initial observation."""
-    global _env
-    _env = AshaEnvironment()  # fresh instance
+def reset(req: ResetRequest = None) -> Dict[str, Any]:
+    """Start a new episode. Returns initial observation and session_id."""
+    global _default_session_id
 
-    if request is None:
-        request = ResetRequest()
+    if req is None:
+        req = ResetRequest()
+
+    session_id = req.session_id or uuid.uuid4().hex[:12]
 
     try:
-        obs = _env.reset(task_id=request.task_id, seed=request.seed)
-        return {"observation": _obs_to_dict(obs), "metadata": {}}
+        env = AshaEnvironment()
+        obs = env.reset(task_id=req.task_id, seed=req.seed)
+        with _lock:
+            _sessions[session_id] = env
+            _default_session_id = session_id
+        return {"observation": _obs_to_dict(obs), "session_id": session_id}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.post("/step")
-def step(action: ActionRequest) -> Dict[str, Any]:
+def step(
+    action: ActionRequest,
+    session_id: str = Header(default="", alias="X-Session-ID"),
+) -> Dict[str, Any]:
     """Process one agent action. Returns new observation with reward."""
+    global _default_session_id
+
+    # Fall back to the most-recently-reset session if no header is provided.
+    # This keeps backward compatibility with inference.py which does not send
+    # an X-Session-ID header.
+    effective_id = session_id or _default_session_id or ""
+
+    with _lock:
+        env = _sessions.get(effective_id)
+
+    if env is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Session not found. POST /reset first.",
+        )
+
     try:
         asha_action = AshaAction(
             referral_decision=action.referral_decision,
@@ -212,7 +250,7 @@ def step(action: ActionRequest) -> Dict[str, Any]:
             question=action.question,
             confidence=action.confidence,
         )
-        obs = _env.step(asha_action)
+        obs = env.step(asha_action)
         return {"observation": _obs_to_dict(obs), "metadata": {}}
     except AssertionError as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -221,10 +259,24 @@ def step(action: ActionRequest) -> Dict[str, Any]:
 
 
 @app.get("/state")
-def state() -> Dict[str, Any]:
+def state(
+    session_id: str = Header(default="", alias="X-Session-ID"),
+) -> Dict[str, Any]:
     """Return current internal state."""
+    global _default_session_id
+
+    effective_id = session_id or _default_session_id or ""
+
+    with _lock:
+        env = _sessions.get(effective_id)
+
+    if env is None:
+        raise HTTPException(status_code=404, detail="Session not found. POST /reset first.")
+
     try:
-        s = _env.state
+        s = env._state
+        if s is None:
+            raise AssertionError("No active episode.")
         return {
             "state": StateOut(
                 episode_id=s.episode_id,
@@ -239,6 +291,112 @@ def state() -> Dict[str, Any]:
         }
     except AssertionError as e:
         raise HTTPException(status_code=400, detail="No active episode. Call /reset first.")
+
+
+@app.delete("/session/{session_id}")
+def delete_session(session_id: str):
+    """Remove a session from the registry."""
+    with _lock:
+        removed = _sessions.pop(session_id, None)
+    if removed is None:
+        raise HTTPException(status_code=404, detail="Session not found.")
+    return {"status": "deleted", "session_id": session_id}
+
+
+# ---------------------------------------------------------------------------
+# Multi-Agent Routes (Theme 1 — ASHA Worker + PHC Doctor)
+# ---------------------------------------------------------------------------
+
+class MultiResetRequest(BaseModel):
+    task_id: str = "easy"
+    seed: int = 42
+    session_id: Optional[str] = None
+
+
+class DoctorActionRequest(BaseModel):
+    disposition: str = "manage_at_phc"
+    investigations: List[str] = []
+    treatment: str = ""
+    rationale: str = ""
+
+
+@app.post("/multi/reset")
+def multi_reset(req: MultiResetRequest) -> Dict[str, Any]:
+    """Start a new multi-agent episode (ASHA Worker + PHC Doctor)."""
+    env = MultiAgentAshaEnvironment()
+    result = env.reset(task_id=req.task_id, seed=req.seed, session_id=req.session_id)
+    session_id = result["session_id"]
+    with _lock:
+        _multi_sessions[session_id] = env
+    return result
+
+
+@app.post("/multi/step/asha")
+def multi_step_asha(
+    action: ActionRequest,
+    session_id: str = Header(default="", alias="X-Session-ID"),
+) -> Dict[str, Any]:
+    """ASHA Worker turn in a multi-agent episode."""
+    with _lock:
+        env = _multi_sessions.get(session_id)
+    if env is None:
+        raise HTTPException(status_code=404, detail="Multi-agent session not found. POST /multi/reset first.")
+    try:
+        asha_action = AshaAction(
+            referral_decision=action.referral_decision,
+            urgency=action.urgency,
+            primary_concern=action.primary_concern,
+            action_items=action.action_items,
+            question=action.question,
+            confidence=action.confidence,
+        )
+        return env.step_asha(asha_action)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/multi/step/doctor")
+def multi_step_doctor(
+    action: DoctorActionRequest,
+    session_id: str = Header(default="", alias="X-Session-ID"),
+) -> Dict[str, Any]:
+    """PHC Doctor turn in a multi-agent episode."""
+    with _lock:
+        env = _multi_sessions.get(session_id)
+    if env is None:
+        raise HTTPException(status_code=404, detail="Multi-agent session not found.")
+    try:
+        from ..models import PHCDoctorAction
+        doctor_action = PHCDoctorAction(
+            disposition=action.disposition,
+            investigations=action.investigations,
+            treatment=action.treatment,
+            rationale=action.rationale,
+        )
+        result = env.step_doctor(doctor_action)
+        # Clean up completed session
+        if result.get("done"):
+            with _lock:
+                _multi_sessions.pop(session_id, None)
+        return result
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/multi/observations")
+def multi_observations(
+    session_id: str = Header(default="", alias="X-Session-ID"),
+) -> Dict[str, Any]:
+    """Return role-scoped observations for both agents in a multi-agent session."""
+    with _lock:
+        env = _multi_sessions.get(session_id)
+    if env is None:
+        raise HTTPException(status_code=404, detail="Multi-agent session not found.")
+    return env.get_observations()
 
 
 # Mount Gradio UI at /ui

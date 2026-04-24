@@ -41,7 +41,13 @@ class AshaEnvironment:
     Each episode = one patient case. Multi-turn conversation.
     """
 
-    SUPPORTS_CONCURRENT_SESSIONS = False
+    SUPPORTS_CONCURRENT_SESSIONS = True
+
+    # Adaptive curriculum tracking (class-level — shared across all instances intentionally)
+    # Multi-Armed Bandit: weight sampling toward categories with higher failure rates
+    _curriculum_attempts: dict[str, int] = {}
+    _curriculum_successes: dict[str, int] = {}
+    _CATEGORIES = ["pediatric", "maternal", "neonatal", "tb", "ncd", "adolescent", "malaria", "general"]
 
     def __init__(self) -> None:
         self._state: Optional[AshaState] = None
@@ -64,9 +70,19 @@ class AshaEnvironment:
         seed : int
             Random seed for reproducibility
         """
-        rng = random.Random(seed)
         case_ids = CASES_BY_DIFFICULTY.get(task_id, CASES_BY_DIFFICULTY["easy"])
-        case_id = rng.choice(case_ids)
+        rng = random.Random(seed)
+
+        # Adaptive curriculum: weight by inverse success rate per category
+        weights = []
+        for cid in case_ids:
+            cat = ALL_CASES[cid].category if hasattr(ALL_CASES[cid], 'category') else "general"
+            attempts = AshaEnvironment._curriculum_attempts.get(cat, 0)
+            successes = AshaEnvironment._curriculum_successes.get(cat, 0)
+            failure_rate = 1.0 - (successes / attempts) if attempts > 0 else 1.0
+            weights.append(0.3 + failure_rate)  # floor 0.3 ensures all cases are sampled
+
+        case_id = rng.choices(case_ids, weights=weights, k=1)[0]
         case = ALL_CASES[case_id]
 
         episode_id = str(uuid.uuid4())[:8]
@@ -191,6 +207,14 @@ class AshaEnvironment:
             max_turns=max_turns,
         )
 
+        # Adaptive curriculum: track outcomes per category
+        _case_category = getattr(self._case, 'category', 'general')
+        AshaEnvironment._curriculum_attempts[_case_category] = \
+            AshaEnvironment._curriculum_attempts.get(_case_category, 0) + 1
+        if grade.composite_reward >= 0.7:
+            AshaEnvironment._curriculum_successes[_case_category] = \
+                AshaEnvironment._curriculum_successes.get(_case_category, 0) + 1
+
         # Update state with scores
         self._state.score_referral = grade.referral_score
         self._state.score_urgency = grade.urgency_score
@@ -224,6 +248,22 @@ class AshaEnvironment:
     def state(self) -> AshaState:
         assert self._state is not None, "Call reset() before accessing state"
         return self._state
+
+    @classmethod
+    def get_curriculum_state(cls) -> dict:
+        """Return current adaptive curriculum weights per category."""
+        state = {}
+        for cat in cls._CATEGORIES:
+            attempts = cls._curriculum_attempts.get(cat, 0)
+            successes = cls._curriculum_successes.get(cat, 0)
+            failure_rate = 1.0 - (successes / attempts) if attempts > 0 else 1.0
+            state[cat] = {
+                "attempts": attempts,
+                "successes": successes,
+                "failure_rate": round(failure_rate, 3),
+                "weight": round(0.3 + failure_rate, 3),
+            }
+        return state
 
     # ------------------------------------------------------------------
     # Internal helpers
@@ -273,6 +313,10 @@ class AshaEnvironment:
         if len(question.split()) >= 8:
             reward += 0.02
 
+        # Bonus for using a relevant tool
+        if question and "[TOOL:" in question and "[TOOL ERROR]" not in question:
+            reward += 0.05
+
         return round(min(reward, 0.15), 3)
 
     def _generate_response(self, question: str) -> str:
@@ -281,6 +325,12 @@ class AshaEnvironment:
         Uses keyword matching (case-insensitive).
         Returns the most relevant response, or a generic "no other signs" fallback.
         """
+        import re as _re
+        _TOOL_PATTERN = _re.compile(r'\[TOOL:\s*(\w+)\((.*?)\)\]', _re.IGNORECASE | _re.DOTALL)
+        tool_match = _TOOL_PATTERN.search(question)
+        if tool_match:
+            return self._dispatch_tool(tool_match.group(1), tool_match.group(2))
+
         assert self._case is not None
         question_lower = question.lower()
 
@@ -303,3 +353,61 @@ class AshaEnvironment:
             "Jo bataya hai wahi hai."
             "\n[Sister, no other special signs visible right now. What I told you is all.]"
         )
+
+    @staticmethod
+    def _auto_cast(value: str):
+        """Cast string argument to appropriate Python type."""
+        if value.lower() == "true":
+            return True
+        if value.lower() == "false":
+            return False
+        try:
+            return int(value)
+        except ValueError:
+            pass
+        try:
+            return float(value)
+        except ValueError:
+            pass
+        return value.strip("'\"")
+
+    def _dispatch_tool(self, tool_name: str, args_str: str) -> str:
+        """Parse and execute a tool call, returning the result as a JSON string."""
+        from .tools import (
+            muac_classifier,
+            gestational_age_calculator,
+            drug_dosage_calculator,
+            jssk_eligibility_checker,
+            cbac_ncd_scorer,
+        )
+        import json as _json
+
+        TOOLS = {
+            "muac_classifier": muac_classifier,
+            "gestational_age": gestational_age_calculator,
+            "drug_dose": drug_dosage_calculator,
+            "jssk_eligibility": jssk_eligibility_checker,
+            "cbac_scorer": cbac_ncd_scorer,
+        }
+
+        if tool_name not in TOOLS:
+            return (
+                f"[TOOL ERROR] Unknown tool: '{tool_name}'. "
+                f"Available tools: {list(TOOLS.keys())}"
+            )
+
+        try:
+            kwargs: dict = {}
+            if args_str.strip():
+                for part in args_str.split(","):
+                    part = part.strip()
+                    if "=" not in part:
+                        continue
+                    k, _, v = part.partition("=")
+                    kwargs[k.strip()] = self._auto_cast(v.strip())
+            result = TOOLS[tool_name](**kwargs)
+            return f"[TOOL RESULT]\n{_json.dumps(result, indent=2, ensure_ascii=False)}"
+        except TypeError as e:
+            return f"[TOOL ERROR] Wrong arguments for '{tool_name}': {str(e)}"
+        except Exception as e:
+            return f"[TOOL ERROR] {tool_name} failed: {str(e)}"
