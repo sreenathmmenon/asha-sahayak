@@ -1,8 +1,8 @@
 ---
 title: ASHA Sahayak
 emoji: 🏥
-colorFrom: orange
-colorTo: red
+colorFrom: red
+colorTo: pink
 sdk: docker
 pinned: true
 license: apache-2.0
