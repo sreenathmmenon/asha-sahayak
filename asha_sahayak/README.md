@@ -14,6 +14,10 @@ short_description: AI clinical decision support for India's 1.07M ASHA workers
 > **OpenEnv RL Environment** | Multi-Agent | Tool Use | Adaptive Curriculum  
 > Meta PyTorch OpenEnv Hackathon x Scaler SST India 2026 — Grand Finale
 
+**🔗 HuggingFace Space**: https://huggingface.co/spaces/sreenathmmenon/asha-sahayak  
+**📓 Training Notebook**: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/training/asha_grpo_training.ipynb)  
+**📝 Blog Post**: [BLOG.md](BLOG.md)
+
 ---
 
 ## The Story
@@ -192,31 +196,37 @@ config = GRPOConfig(
 
 ---
 
-## Baseline Performance
+## Results & Training Evidence
 
-Results from inference.py evaluation on the deployed HuggingFace Space:
+### Reward Curves — GRPO Training (Qwen3-0.6B, 200 steps)
+
+![Training Reward Curve](assets/training_reward_curve.png)
+*Episode reward over 200 GRPO training steps. All three difficulty levels improve from random baseline (~0.25) toward trained performance. Medium cases (orange) show the most learning headroom.*
+
+### Multi-Agent Episode Reward Breakdown
+
+![Multi-Agent Reward Breakdown](assets/multi_agent_reward_breakdown.png)
+*Reward breakdown for a two-phase ASHA Worker → PHC Doctor episode. Combined reward formula: 0.55 × R_doctor + 0.30 × R_asha + 0.15 × R_comm = 0.877.*
+
+### Round 1 Baseline (Zero-Shot Qwen2.5-72B)
 
 | Task | Seed | Score | Notes |
 |---|---|---|---|
-| Easy | 42 | ~0.999 | Near-perfect on clear danger signs (severe pneumonia, eclampsia) |
-| Medium | 123 | ~0.675 | Room to improve on complex multi-factor cases |
+| Easy | 42 | ~0.999 | Near-perfect on clear danger signs |
+| Medium | 123 | ~0.675 | Room for improvement on complex multi-factor cases |
 | Hard | 500 | ~0.999 | Correctly handles neonatal emergencies and cord prolapse |
 | **Overall** | — | **~0.849** | **Round 1 submission score** |
 
-### What GRPO Training Improves
-
-The Medium task score (0.675) is the primary training target. Medium cases require:
-- Distinguishing gestational diabetes from normal pregnancy symptoms
-- Recognizing when household TB contact exposure requires referral
-- Quantifying CBAC NCD risk scores before referring
-- Differentiating pathological from physiological neonatal jaundice
-
-After GRPO training, models learn to ask the specific questions (cough duration, LMP date, MUAC measurement) that distinguish referral-required from monitor-only cases.
-
 ### Training Notebook
 
-A complete GRPO training notebook is available at `training/asha_grpo_training.ipynb`.  
-Run it on Google Colab (free T4 GPU) to train Qwen3-0.6B on this environment.
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/training/asha_grpo_training.ipynb)
+
+Full GRPO training notebook: [`training/asha_grpo_training.ipynb`](training/asha_grpo_training.ipynb)  
+Trains Qwen3-0.6B on ASHA Sahayak using HuggingFace TRL. Runs on free Colab T4 GPU (~90 min).
+
+### Blog Post
+
+Full writeup: [`BLOG.md`](BLOG.md) — covers the problem, environment design, reward formula, training results, and why this matters for 1.07M ASHA workers.
 
 ---
 
