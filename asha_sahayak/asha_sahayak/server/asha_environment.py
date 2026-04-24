@@ -73,16 +73,23 @@ class AshaEnvironment:
         case_ids = CASES_BY_DIFFICULTY.get(task_id, CASES_BY_DIFFICULTY["easy"])
         rng = random.Random(seed)
 
-        # Adaptive curriculum: weight by inverse success rate per category
-        weights = []
-        for cid in case_ids:
-            cat = ALL_CASES[cid].category if hasattr(ALL_CASES[cid], 'category') else "general"
-            attempts = AshaEnvironment._curriculum_attempts.get(cat, 0)
-            successes = AshaEnvironment._curriculum_successes.get(cat, 0)
-            failure_rate = 1.0 - (successes / attempts) if attempts > 0 else 1.0
-            weights.append(0.3 + failure_rate)  # floor 0.3 ensures all cases are sampled
-
-        case_id = rng.choices(case_ids, weights=weights, k=1)[0]
+        # Deterministic seed → case mapping (used by hackathon evaluation seeds).
+        # Curriculum weighting only activates when there is enough training data
+        # (>= 10 attempts across any category) so evaluation seeds stay stable.
+        total_attempts = sum(AshaEnvironment._curriculum_attempts.values())
+        if total_attempts >= 10:
+            # Adaptive curriculum: weight by inverse success rate per category
+            weights = []
+            for cid in case_ids:
+                cat = ALL_CASES[cid].category if hasattr(ALL_CASES[cid], 'category') else "general"
+                attempts = AshaEnvironment._curriculum_attempts.get(cat, 0)
+                successes = AshaEnvironment._curriculum_successes.get(cat, 0)
+                failure_rate = 1.0 - (successes / attempts) if attempts > 0 else 1.0
+                weights.append(0.3 + failure_rate)
+            case_id = rng.choices(case_ids, weights=weights, k=1)[0]
+        else:
+            # Pure deterministic: seed selects case by index (matches Round 1 behaviour)
+            case_id = case_ids[seed % len(case_ids)]
         case = ALL_CASES[case_id]
 
         episode_id = str(uuid.uuid4())[:8]
