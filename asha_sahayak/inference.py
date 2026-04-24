@@ -367,6 +367,73 @@ def run_task(client: AshaClient, llm: OpenAI, task: Dict[str, Any]) -> Dict[str,
 
 
 # ---------------------------------------------------------------------------
+# Multi-agent demo
+# ---------------------------------------------------------------------------
+
+def run_multi_agent_demo(base_url: str) -> None:
+    """Demonstrate two-phase multi-agent episode (ASHA Worker + PHC Doctor)."""
+    print("\n[MULTI-AGENT START] Theme 1 Demo: ASHA Worker → PHC Doctor")
+
+    try:
+        # Phase 1: Reset
+        r = httpx.post(f"{base_url}/multi/reset",
+                       json={"task_id": "medium", "seed": 42}, timeout=30)
+        r.raise_for_status()
+        data = r.json()
+        session_id = data["session_id"]
+        initial_text = data["observation"]["conversation"][0]["text"]
+        print(f"[MULTI-AGENT STEP] Phase=asha | Case presentation: {initial_text[:150]}")
+
+        # ASHA Turn 1: ask a question
+        r = httpx.post(f"{base_url}/multi/step/asha",
+                       headers={"X-Session-ID": session_id},
+                       json={"referral_decision": "PENDING", "urgency": "monitor",
+                             "primary_concern": "", "confidence": 0.5,
+                             "question": "How long has the child been coughing, and is there any evening fever or weight loss?"},
+                       timeout=30)
+        r.raise_for_status()
+        step1 = r.json()
+        response_text = step1["observation"]["conversation"][-1]["text"]
+        print(f"[MULTI-AGENT STEP] Phase=asha | Q: cough duration/fever? → {response_text[:100]}")
+
+        # ASHA Turn 2: final decision
+        r = httpx.post(f"{base_url}/multi/step/asha",
+                       headers={"X-Session-ID": session_id},
+                       json={"referral_decision": "REFER_WITHIN_24H", "urgency": "within_24h",
+                             "primary_concern": "pediatric_tb_contact", "confidence": 0.88,
+                             "question": None},
+                       timeout=30)
+        r.raise_for_status()
+        step2 = r.json()
+        asha_score = step2.get("asha_score", "N/A")
+        if isinstance(asha_score, float):
+            print(f"[MULTI-AGENT STEP] Phase=doctor | ASHA score={asha_score:.3f} | Referral note ready")
+        else:
+            print(f"[MULTI-AGENT STEP] Phase=doctor | ASHA score={asha_score} | Referral note ready")
+
+        # Phase 2: PHC Doctor
+        r = httpx.post(f"{base_url}/multi/step/doctor",
+                       headers={"X-Session-ID": session_id},
+                       json={"disposition": "manage_at_phc",
+                             "investigations": ["chest_xray", "mantoux_test"],
+                             "rationale": "Pediatric TB contact. PHC DOTS programme appropriate."},
+                       timeout=30)
+        r.raise_for_status()
+        result = r.json()
+        combined_reward = result.get("reward", 0.0)
+        breakdown = result.get("breakdown", {})
+
+        print(f"[MULTI-AGENT STEP] Phase=done | Combined reward={combined_reward:.4f}")
+        print(f"[MULTI-AGENT STEP] Breakdown: doctor={breakdown.get('doctor_score', 'N/A'):.3f}, "
+              f"asha={breakdown.get('asha_score', 'N/A'):.3f}, "
+              f"comm={breakdown.get('communication_score', 'N/A'):.3f}")
+        print(f"[MULTI-AGENT END] Theme 1 demo complete | reward={combined_reward:.4f}")
+
+    except Exception as e:
+        print(f"[MULTI-AGENT END] Demo failed: {e}")
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -392,11 +459,21 @@ def main() -> None:
             results.append(result)
             print("", flush=True)  # blank line between tasks
 
+    # Log adaptive curriculum state
+    try:
+        meta = httpx.get(f"{ENV_BASE_URL}/metadata", timeout=10).json()
+        print(f"\n[CURRICULUM] Environment: {meta.get('name')} | Cases: {meta.get('num_cases')} | Concurrent: {meta.get('supports_concurrent_sessions')}")
+    except Exception:
+        pass
+
     # Final summary
     overall_score = sum(r["score"] for r in results) / len(results) if results else 0.0
     total_successes = sum(1 for r in results if r["success"])
 
     print(f"[SUMMARY] tasks={len(results)} successes={total_successes} overall_score={overall_score:.3f}", flush=True)
+
+    # Multi-agent theme 1 demonstration
+    run_multi_agent_demo(ENV_BASE_URL)
 
 
 if __name__ == "__main__":

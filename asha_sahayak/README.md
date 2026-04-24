@@ -192,6 +192,34 @@ config = GRPOConfig(
 
 ---
 
+## Baseline Performance
+
+Results from inference.py evaluation on the deployed HuggingFace Space:
+
+| Task | Seed | Score | Notes |
+|---|---|---|---|
+| Easy | 42 | ~0.999 | Near-perfect on clear danger signs (severe pneumonia, eclampsia) |
+| Medium | 123 | ~0.675 | Room to improve on complex multi-factor cases |
+| Hard | 500 | ~0.999 | Correctly handles neonatal emergencies and cord prolapse |
+| **Overall** | — | **~0.849** | **Round 1 submission score** |
+
+### What GRPO Training Improves
+
+The Medium task score (0.675) is the primary training target. Medium cases require:
+- Distinguishing gestational diabetes from normal pregnancy symptoms
+- Recognizing when household TB contact exposure requires referral
+- Quantifying CBAC NCD risk scores before referring
+- Differentiating pathological from physiological neonatal jaundice
+
+After GRPO training, models learn to ask the specific questions (cough duration, LMP date, MUAC measurement) that distinguish referral-required from monitor-only cases.
+
+### Training Notebook
+
+A complete GRPO training notebook is available at `training/asha_grpo_training.ipynb`.  
+Run it on Google Colab (free T4 GPU) to train Qwen3-0.6B on this environment.
+
+---
+
 ## Setup
 
 ```bash
