@@ -111,6 +111,9 @@ class AshaObservation(Observation):
     # Feedback after final decision (None until done=True)
     feedback: Optional[str] = None
 
+    # Per-component reward breakdown (populated at done=True, None on intermediate steps)
+    reward_components: Optional[dict] = None
+
 
 # ---------------------------------------------------------------------------
 # State — internal episode metadata (not all visible to agent)

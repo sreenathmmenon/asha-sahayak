@@ -58,6 +58,7 @@ class ObservationOut(BaseModel):
     done: bool
     reward: float
     feedback: Optional[str]
+    reward_components: Optional[dict] = None
 
 
 class StateOut(BaseModel):
@@ -131,6 +132,7 @@ def _obs_to_dict(obs) -> Dict[str, Any]:
         done=obs.done,
         reward=obs.reward,
         feedback=obs.feedback,
+        reward_components=getattr(obs, 'reward_components', None),
     ).model_dump()
 
 

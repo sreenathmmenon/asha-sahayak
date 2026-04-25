@@ -248,6 +248,14 @@ class AshaEnvironment:
             done=True,
             reward=grade.composite_reward,
             feedback=grade.feedback_message,
+            reward_components={
+                "referral": round(grade.referral_score, 4),
+                "urgency": round(grade.urgency_score, 4),
+                "primary_concern": round(grade.primary_concern_score, 4),
+                "information_gathering": round(grade.information_gathering_score, 4),
+                "composite": round(grade.composite_reward, 4),
+                "weights": {"referral": 0.40, "urgency": 0.25, "primary_concern": 0.20, "information_gathering": 0.15},
+            },
         )
 
     # ------------------------------------------------------------------

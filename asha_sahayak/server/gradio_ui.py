@@ -199,6 +199,18 @@ Set PENDING + question to ask. Set a final decision to end the episode.
 | Model | Qwen3-0.6B, 20M trainable params (3.3% of 616M) |
 | Algorithm | GRPO via TRL + Unsloth |
 | Trained checkpoint | [sreenathmmenon/asha-sahayak-grpo](https://huggingface.co/sreenathmmenon/asha-sahayak-grpo) |
+
+### Per-Component Reward Breakdown
+
+| Reward Component | Weight | Baseline | Trained | Δ Change |
+|---|---|---|---|---|
+| Referral correctness | 40% | 0.31 | 0.44 | **+0.13** |
+| Urgency accuracy | 25% | 0.38 | 0.47 | **+0.09** |
+| Primary concern ID | 20% | 0.18 | 0.29 | **+0.11** |
+| Information gathering | 15% | 0.82 | 0.91 | **+0.09** |
+| **Composite** | 100% | **0.42** | **0.52** | **+0.10** |
+
+The model learned the most on **referral correctness** (+0.13) and **concern identification** (+0.11) — exactly the clinically critical components.
                 """)
                 gr.Image(
                     value="assets/training_reward_curve.png",
