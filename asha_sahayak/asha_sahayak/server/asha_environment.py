@@ -14,6 +14,7 @@ LeCun requirement enforced: agent must ask at least 1 question before deciding.
 from __future__ import annotations
 
 import random
+import threading
 import uuid
 from typing import Optional
 
@@ -47,6 +48,7 @@ class AshaEnvironment:
     # Multi-Armed Bandit: weight sampling toward categories with higher failure rates
     _curriculum_attempts: dict[str, int] = {}
     _curriculum_successes: dict[str, int] = {}
+    _curriculum_lock: threading.Lock = threading.Lock()
     _CATEGORIES = ["pediatric", "maternal", "neonatal", "tb", "ncd", "adolescent", "malaria", "general"]
 
     def __init__(self) -> None:
@@ -214,13 +216,14 @@ class AshaEnvironment:
             max_turns=max_turns,
         )
 
-        # Adaptive curriculum: track outcomes per category
+        # Adaptive curriculum: track outcomes per category (lock protects shared class-level dicts)
         _case_category = getattr(self._case, 'category', 'general')
-        AshaEnvironment._curriculum_attempts[_case_category] = \
-            AshaEnvironment._curriculum_attempts.get(_case_category, 0) + 1
-        if grade.composite_reward >= 0.7:
-            AshaEnvironment._curriculum_successes[_case_category] = \
-                AshaEnvironment._curriculum_successes.get(_case_category, 0) + 1
+        with AshaEnvironment._curriculum_lock:
+            AshaEnvironment._curriculum_attempts[_case_category] = \
+                AshaEnvironment._curriculum_attempts.get(_case_category, 0) + 1
+            if grade.composite_reward >= 0.7:
+                AshaEnvironment._curriculum_successes[_case_category] = \
+                    AshaEnvironment._curriculum_successes.get(_case_category, 0) + 1
 
         # Update state with scores
         self._state.score_referral = grade.referral_score
