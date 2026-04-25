@@ -119,7 +119,7 @@ DECISION_TEMPLATE = json.dumps({
 
 
 def build_gradio_app() -> gr.Blocks:
-    with gr.Blocks(title="ASHA Sahayak") as demo:
+    with gr.Blocks(title="ASHA Sahayak", css=".gradio-container { min-height: 100vh; }") as demo:
 
         gr.Markdown("""
 # ASHA Sahayak — AI Clinical Decision Support
