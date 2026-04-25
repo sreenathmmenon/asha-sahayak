@@ -246,22 +246,28 @@ Set `PENDING` + `question` to ask a clarifying question. Set a final decision to
 The model improved most on **referral correctness** (+0.53) and **concern identification** (+0.52) — the clinically critical components.
                 """)
 
+        gr.Image(
+            value="assets/training_comparison_overlaid.png",
+            label="Run 1 vs Run 2 — Both Runs on Same Axes",
+            show_label=True,
+        )
+
         with gr.Row():
             with gr.Column():
                 gr.Image(
                     value="assets/training_reward_curve_run1.png",
-                    label="Run 1 — Before fix (baseline ~0.47, final ~0.52)",
+                    label="Run 1 — Regex parsing (baseline ~0.47, final ~0.52)",
                     show_label=True,
                 )
             with gr.Column():
                 gr.Image(
                     value="assets/training_reward_curve.png",
-                    label="Run 2 — After JSON fix (baseline 0.31, peak 0.947, final 0.75)",
+                    label="Run 2 — JSON fix (baseline 0.31, peak 0.947, final 0.75)",
                     show_label=True,
                 )
 
         gr.Markdown("""
-> **What changed between runs:** Run 1 used regex to extract the model's concern — defaulting to "general" when the model didn't match the pattern, so the concern reward component was nearly always 0. Run 2 updated the system prompt to request structured JSON output and used JSON parsing instead. This unlocked the concern component (+0.52) and drove the overall reward from 0.52 → 0.75.
+> **What changed between runs:** Run 1 used regex to extract the model's concern — defaulting to "general" when the model didn't match the pattern, so the concern reward component was nearly always 0. Run 2 switched to structured JSON output and JSON parsing instead of regex. This unlocked the concern component (+0.52) and drove the overall reward from 0.52 → 0.75 (+142% over baseline).
         """)
 
         gr.Markdown("""

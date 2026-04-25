@@ -200,7 +200,11 @@ config = GRPOConfig(
 
 ### Reward Curves — GRPO Training (Qwen3-0.6B, 200 steps)
 
-![Training Reward Curve](assets/training_reward_curve.png)
+![Run 1 vs Run 2 — Both Runs Overlaid](assets/training_comparison_overlaid.png)
+*Run 1 (gray) used regex parsing — concern component nearly always 0, modest gains. Run 2 (blue) switched to JSON output — unlocked all 4 reward components, reward jumped from 0.31 baseline to 0.947 peak (+142%).*
+
+![Run 2 — Training Reward Curve](assets/training_reward_curve.png)
+*Run 2 detailed view: baseline 0.31, strong upward trend steps 0→100, peak 0.947 at step 189, final 0.75.*
 
 **Real training run — 200 GRPO steps, April 25 2026.**
 
@@ -229,6 +233,11 @@ The reward curve shows a strong upward trend reaching **0.947 peak at step 189**
 | 8-month-old, fast breathing | "Monitor at home, give fluids" ❌ | Asks about chest indrawing → REFER_IMMEDIATELY ✅ |
 | Pregnant woman, headache + blurred vision | "Rest and check later" ❌ | Identifies pre-eclampsia → REFER_IMMEDIATELY ✅ |
 | Newborn, Day 3 jaundice, feeding well | "Refer to hospital" ❌ (over-triage) | MONITOR — physiological jaundice, normal ✅ |
+
+### Run 1 vs Run 2 — What Changed
+
+![Run 1 Training Curve](assets/training_reward_curve_run1.png)
+*Run 1 (baseline): regex concern extraction — model output not matching regex defaulted to "general", concern reward ≈0. Baseline ~0.47, final ~0.52 — weak signal.*
 
 ### Multi-Agent Episode Reward Breakdown
 
