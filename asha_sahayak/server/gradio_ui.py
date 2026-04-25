@@ -130,8 +130,21 @@ DECISION_TEMPLATE = json.dumps({
 }, indent=2)
 
 
+_CSS = """
+.section-header {
+    border-left: 4px solid #2563eb;
+    padding-left: 14px;
+    margin-top: 12px;
+    margin-bottom: 4px;
+}
+.gradio-container { max-width: 1100px; margin: auto; }
+"""
+
+_DIVIDER = "<div style='margin: 36px 0; border-top: 2px solid #e5e7eb;'></div>"
+
+
 def build_gradio_app() -> gr.Blocks:
-    with gr.Blocks(title="ASHA Sahayak") as demo:
+    with gr.Blocks(title="ASHA Sahayak", theme=gr.themes.Soft(), css=_CSS) as demo:
 
         gr.Markdown("""
 # ASHA Sahayak — AI Clinical Decision Support
@@ -140,7 +153,8 @@ def build_gradio_app() -> gr.Blocks:
 *Backed by official Indian Government IMNCI protocol · 1.07 million ASHA workers · 600 million people*
         """)
 
-        gr.Markdown("## Interactive Demo")
+        gr.Markdown("## Interactive Demo", elem_classes=["section-header"])
+        gr.Markdown("*Select a difficulty, start a case, then submit actions as the AI agent. The ASHA worker responds based on the IMNCI clinical protocol.*")
 
         with gr.Row():
             with gr.Column(scale=1):
@@ -178,10 +192,9 @@ def build_gradio_app() -> gr.Blocks:
         feedback_box = gr.Markdown("*Feedback appears here after final decision*")
 
         gr.Markdown("""
----
-**referral_decision:** REFER_IMMEDIATELY | REFER_WITHIN_24H | TREAT_AT_HOME | MONITOR | PENDING
+**referral_decision:** `REFER_IMMEDIATELY` | `REFER_WITHIN_24H` | `TREAT_AT_HOME` | `MONITOR` | `PENDING`
 
-Set PENDING + question to ask. Set a final decision to end the episode.
+Set `PENDING` + `question` to ask a clarifying question. Set a final decision to end the episode.
         """)
 
         reset_btn.click(
@@ -197,36 +210,41 @@ Set PENDING + question to ask. Set a final decision to end the episode.
         pending_btn.click(fn=lambda: PENDING_TEMPLATE, outputs=action_input)
         decision_btn.click(fn=lambda: DECISION_TEMPLATE, outputs=action_input)
 
-        gr.Markdown("---")
-        gr.Markdown("## Training Results")
+        gr.HTML(_DIVIDER)
+        gr.Markdown("## Training Results", elem_classes=["section-header"])
 
-        gr.Markdown("""
-### GRPO Training Results — Qwen3-0.6B on ASHA Sahayak
+        with gr.Row():
+            with gr.Column():
+                gr.Markdown("""
+### Overall Results — Qwen3-0.6B · 200 GRPO Steps
 
-**Real training run · 200 steps · April 25, 2026**
+**Real training run · April 25, 2026**
 
 | Metric | Value |
 |---|---|
-| Baseline reward (step 1) | 0.31 |
+| Baseline reward | 0.31 |
 | Final reward (step 200) | **0.75** |
 | Peak reward (step 189) | **0.947** |
-| Improvement | **+0.44 absolute (+142% relative)** |
-| Model | Qwen3-0.6B, 20M trainable params (3.3% of 616M) |
+| Improvement | **+142% relative** |
+| Model | Qwen3-0.6B (3.3% of params trained) |
 | Algorithm | GRPO via TRL + Unsloth |
-| Trained checkpoint | [sreenathmmenon/asha-sahayak-grpo](https://huggingface.co/sreenathmmenon/asha-sahayak-grpo) |
+| Checkpoint | [asha-sahayak-grpo](https://huggingface.co/sreenathmmenon/asha-sahayak-grpo) |
+                """)
 
+            with gr.Column():
+                gr.Markdown("""
 ### Per-Component Reward Breakdown
 
-| Reward Component | Weight | Baseline | Trained | Δ Change |
+| Component | Weight | Baseline | Trained | Δ |
 |---|---|---|---|---|
 | Referral correctness | 40% | 0.18 | 0.71 | **+0.53** |
 | Urgency accuracy | 25% | 0.22 | 0.68 | **+0.46** |
 | Primary concern ID | 20% | 0.09 | 0.61 | **+0.52** |
-| Information gathering | 15% | 0.91 | 0.95 | **+0.04** |
+| Info gathering | 15% | 0.91 | 0.95 | **+0.04** |
 | **Composite** | 100% | **0.31** | **0.75** | **+0.44** |
 
-The model learned the most on **referral correctness** (+0.53) and **concern identification** (+0.52) — exactly the clinically critical components. With proper JSON-structured output, all 4 reward components were trained effectively.
-        """)
+The model improved most on **referral correctness** (+0.53) and **concern identification** (+0.52) — the clinically critical components.
+                """)
 
         gr.Image(
             value="assets/training_reward_curve.png",
@@ -244,17 +262,16 @@ The model learned the most on **referral correctness** (+0.53) and **concern ide
 | Newborn Day 3, mild jaundice, feeding well | "Refer to hospital" ❌ (over-triage) | **MONITOR** — physiological jaundice, normal ✅ |
 
 ### What the Model Learned
-The reward curve shows a strong upward trend from steps 0→100, reaching **0.947 peak at step 189** — a +142% improvement over baseline.
-The model learned to:
+The reward curve shows a strong upward trend steps 0→100, reaching **0.947 peak at step 189** — a +142% improvement over baseline. The model learned to:
 - Ask clarifying questions **before** making a referral decision
-- Output structured JSON decisions enabling all 4 reward components to be scored
-- Distinguish REFER_IMMEDIATELY from TREAT_AT_HOME on danger signs
+- Output structured JSON enabling all 4 reward components to be scored
+- Distinguish REFER_IMMEDIATELY from TREAT_AT_HOME based on IMNCI danger signs
 - Avoid dangerous under-triage (sending emergency cases home)
 - Avoid over-triage (sending healthy newborns to hospital unnecessarily)
         """)
 
-        gr.Markdown("---")
-        gr.Markdown("## About")
+        gr.HTML(_DIVIDER)
+        gr.Markdown("## About", elem_classes=["section-header"])
 
         gr.Markdown("""
 ### The Story
@@ -274,27 +291,40 @@ ambiguous, she improvises. Sometimes correctly. Sometimes not.
 **The Solution.** ASHA Sahayak is an OpenEnv RL environment that trains AI to assist ASHA workers —
 asking the right questions, applying IMNCI correctly, recognizing the 15 danger signs that require
 immediate referral. Ground truth: official Indian Government IMNCI protocol.
+        """)
 
----
-
+        with gr.Row():
+            with gr.Column():
+                gr.Markdown("""
 ### Environment Design
 
 | Feature | Detail |
 |---|---|
 | Cases | 31 clinical cases across 7 domains |
 | Domains | Pediatric, Maternal, Neonatal, TB, NCD, Adolescent, Malaria |
-| Reward | Referral (40%) + Urgency (25%) + Concern (20%) + Info gathering (15%) |
+| Reward | Referral (40%) + Urgency (25%) + Concern (20%) + Info (15%) |
 | Concurrent sessions | 64 (GRPO-ready) |
 | Clinical tools | 5 (MUAC, gestational age, drug dose, JSSK, CBAC) |
 | Curriculum | Multi-Armed Bandit adaptive sampling |
 | Multi-agent | ASHA Worker + PHC Doctor two-phase episodes |
+                """)
 
+            with gr.Column():
+                gr.Markdown("""
 ### Themes Claimed
-- **Theme 1** — Multi-Agent: ASHA Worker + PHC Doctor with information asymmetry
-- **Theme 3.1** — Tool Use: 5 deterministic clinical tools from NHM/IMNCI guidelines
-- **Theme 4** — Self-Improvement: Adaptive curriculum (Multi-Armed Bandit)
+
+- **Theme 1 — Multi-Agent**
+  ASHA Worker + PHC Doctor with information asymmetry
+
+- **Theme 3.1 — Tool Use**
+  5 deterministic clinical tools from NHM/IMNCI guidelines
+
+- **Theme 4 — Self-Improvement**
+  Adaptive curriculum via Multi-Armed Bandit
+
+---
 
 *Ground truth: IMNCI Protocol, NHM Guidelines, JSSK, NTEP, NPCDCS — Government of India*
-        """)
+                """)
 
     return demo
