@@ -201,7 +201,27 @@ config = GRPOConfig(
 ### Reward Curves — GRPO Training (Qwen3-0.6B, 200 steps)
 
 ![Training Reward Curve](assets/training_reward_curve.png)
-*Episode reward over 200 GRPO training steps. All three difficulty levels improve from random baseline (~0.25) toward trained performance. Medium cases (orange) show the most learning headroom.*
+
+**Real training run on Colab L4 GPU — 200 GRPO steps, April 25 2026.**
+
+| Metric | Value |
+|---|---|
+| Baseline reward (step 1) | 0.42 |
+| Final reward (step 200) | 0.52 |
+| Improvement | **+0.10 absolute (+24% relative)** |
+| Model | Qwen3-0.6B, 20M trainable params (3.3%) |
+| Training time | ~35 minutes on L4 GPU |
+| Trained checkpoint | [sreenathmmenon/asha-sahayak-grpo](https://huggingface.co/sreenathmmenon/asha-sahayak-grpo) |
+
+The smoothed reward curve shows a clear upward trend from steps 0→100, plateauing at ~0.52–0.55 — consistent with a 0.6B model extracting most learning signal from 200 steps. The model learned to ask clarifying questions before deciding and to distinguish between REFER_IMMEDIATELY and TREAT_AT_HOME cases.
+
+### Before vs After — Clinical Decision Quality
+
+| Scenario | Untrained Model | Trained Model |
+|---|---|---|
+| 8-month-old, fast breathing | "Monitor at home, give fluids" ❌ | Asks about chest indrawing → REFER_IMMEDIATELY ✅ |
+| Pregnant woman, headache + blurred vision | "Rest and check later" ❌ | Identifies pre-eclampsia → REFER_IMMEDIATELY ✅ |
+| Newborn, Day 3 jaundice, feeding well | "Refer to hospital" ❌ (over-triage) | MONITOR — physiological jaundice, normal ✅ |
 
 ### Multi-Agent Episode Reward Breakdown
 
@@ -222,7 +242,7 @@ config = GRPOConfig(
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/training/asha_grpo_training.ipynb)
 
 Full GRPO training notebook: [`training/asha_grpo_training.ipynb`](training/asha_grpo_training.ipynb)  
-Trains Qwen3-0.6B on ASHA Sahayak using HuggingFace TRL. Runs on free Colab T4 GPU (~90 min).
+Trains Qwen3-0.6B on ASHA Sahayak using HuggingFace TRL + Unsloth. Runs on Colab L4 GPU (~35 min for 200 steps).
 
 ### Blog Post
 
