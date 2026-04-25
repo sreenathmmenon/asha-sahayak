@@ -203,7 +203,7 @@ Set PENDING + question to ask. Set a final decision to end the episode.
         gr.Markdown("""
 ### GRPO Training Results — Qwen3-0.6B on ASHA Sahayak
 
-**Real training run · Colab L4 GPU · 200 steps · April 25, 2026**
+**Real training run · 200 steps · April 25, 2026**
 
 | Metric | Value |
 |---|---|

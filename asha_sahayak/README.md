@@ -202,7 +202,7 @@ config = GRPOConfig(
 
 ![Training Reward Curve](assets/training_reward_curve.png)
 
-**Real training run on Colab L4 GPU — 200 GRPO steps, April 25 2026.**
+**Real training run — 200 GRPO steps, April 25 2026.**
 
 | Metric | Value |
 |---|---|
@@ -211,7 +211,6 @@ config = GRPOConfig(
 | Peak reward | **0.947** (step 189) |
 | Improvement | **+0.44 absolute (+142% relative)** |
 | Model | Qwen3-0.6B, 20M trainable params (3.3%) |
-| Training time | ~35 minutes on L4 GPU |
 | Trained checkpoint | [sreenathmmenon/asha-sahayak-grpo](https://huggingface.co/sreenathmmenon/asha-sahayak-grpo) |
 
 | Reward Component | Weight | Baseline | Trained | Δ |
@@ -250,7 +249,7 @@ The reward curve shows a strong upward trend reaching **0.947 peak at step 189**
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/training/asha_grpo_training.ipynb)
 
 Full GRPO training notebook: [`training/asha_grpo_training.ipynb`](training/asha_grpo_training.ipynb)  
-Trains Qwen3-0.6B on ASHA Sahayak using HuggingFace TRL + Unsloth. Runs on Colab L4 GPU (~35 min for 200 steps).
+Trains Qwen3-0.6B on ASHA Sahayak using HuggingFace TRL + Unsloth. 200 GRPO steps.
 
 ### Blog Post
 
