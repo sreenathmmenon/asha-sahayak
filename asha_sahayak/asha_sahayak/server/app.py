@@ -305,6 +305,49 @@ def delete_session(session_id: str):
     return {"status": "deleted", "session_id": session_id}
 
 
+class ScoreRequest(BaseModel):
+    task_id: str = "easy"
+    seed: int = 42
+    referral_decision: str = "REFER_IMMEDIATELY"
+    urgency: str = "immediate"
+    primary_concern: str = ""
+    confidence: float = 0.8
+
+
+@app.post("/score")
+def score_action(req: ScoreRequest) -> Dict[str, Any]:
+    """
+    Score a single referral decision against a case — no session needed.
+    Returns per-component reward breakdown. Useful for verifying reward objectivity.
+    """
+    try:
+        env = AshaEnvironment()
+        env.reset(task_id=req.task_id, seed=req.seed)
+        env.step(AshaAction(
+            referral_decision="PENDING",
+            urgency="unknown",
+            primary_concern="gathering_information",
+            question="Does the patient have any danger signs?",
+            confidence=0.5,
+        ))
+        obs = env.step(AshaAction(
+            referral_decision=req.referral_decision,
+            urgency=req.urgency,
+            primary_concern=req.primary_concern,
+            confidence=req.confidence,
+        ))
+        return {
+            "case_id": env._case.case_id,
+            "correct_referral": env._case.correct_referral,
+            "predicted_referral": req.referral_decision,
+            "reward": obs.reward,
+            "reward_components": obs.reward_components,
+            "feedback": obs.feedback,
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
 # ---------------------------------------------------------------------------
 # Multi-Agent Routes (Theme 1 — ASHA Worker + PHC Doctor)
 # ---------------------------------------------------------------------------

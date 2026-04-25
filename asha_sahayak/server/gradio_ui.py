@@ -32,6 +32,7 @@ def _obs_to_dict(obs) -> Dict[str, Any]:
         "done": obs.done,
         "reward": obs.reward,
         "feedback": obs.feedback,
+        "reward_components": getattr(obs, 'reward_components', None),
     }
 
 
@@ -92,7 +93,18 @@ def submit_action(action_json: str, history: List) -> Tuple[List, str, str, str]
 
     conv = obs.conversation
     if obs.done:
-        history.append({"role": "assistant", "content": f"**Episode Complete — Score: {obs.reward:.3f}**\n\n{obs.feedback or ''}"})
+        rc = getattr(obs, 'reward_components', None)
+        breakdown = ""
+        if rc:
+            breakdown = (
+                f"\n\n**Score Breakdown:**\n"
+                f"- Referral (40%): **{rc['referral']:.3f}**\n"
+                f"- Urgency (25%): **{rc['urgency']:.3f}**\n"
+                f"- Concern (20%): **{rc['primary_concern']:.3f}**\n"
+                f"- Info gathering (15%): **{rc['information_gathering']:.3f}**"
+            )
+        history.append({"role": "assistant", "content":
+            f"**Episode Complete — Score: {obs.reward:.3f}**{breakdown}\n\n{obs.feedback or ''}"})
         return history, f"Done! Final score: {obs.reward:.3f}", obs.feedback or "", action_json
 
     if conv and conv[-1].role == "asha_worker":
@@ -119,7 +131,7 @@ DECISION_TEMPLATE = json.dumps({
 
 
 def build_gradio_app() -> gr.Blocks:
-    with gr.Blocks(title="ASHA Sahayak", css=".gradio-container { min-height: 100vh; }") as demo:
+    with gr.Blocks(title="ASHA Sahayak") as demo:
 
         gr.Markdown("""
 # ASHA Sahayak — AI Clinical Decision Support
@@ -128,66 +140,68 @@ def build_gradio_app() -> gr.Blocks:
 *Backed by official Indian Government IMNCI protocol · 1.07 million ASHA workers · 600 million people*
         """)
 
-        with gr.Tabs():
-            with gr.Tab("Demo"):
+        gr.Markdown("## Interactive Demo")
+
+        with gr.Row():
+            with gr.Column(scale=1):
+                gr.Markdown("### Setup")
+                task_dropdown = gr.Dropdown(
+                    choices=["easy", "medium", "hard"],
+                    value="easy",
+                    label="Task Difficulty",
+                )
+                seed_input = gr.Number(value=42, label="Seed", precision=0)
+                reset_btn = gr.Button("Start New Case", variant="primary")
+                gr.Markdown("### Patient Context")
+                context_box = gr.Markdown("*Start an episode*")
+                gr.Markdown("### Status")
+                status_box = gr.Textbox(value="Not started", interactive=False, lines=1, label="")
+
+            with gr.Column(scale=2):
+                gr.Markdown("### Conversation")
+                chatbot = gr.Chatbot(
+                    label="ASHA Worker ↔ Agent",
+                    height=380,
+                )
+                gr.Markdown("### Action JSON")
                 with gr.Row():
-                    with gr.Column(scale=1):
-                        gr.Markdown("### Setup")
-                        task_dropdown = gr.Dropdown(
-                            choices=["easy", "medium", "hard"],
-                            value="easy",
-                            label="Task Difficulty",
-                        )
-                        seed_input = gr.Number(value=42, label="Seed", precision=0)
-                        reset_btn = gr.Button("Start New Case", variant="primary")
-                        gr.Markdown("### Patient Context")
-                        context_box = gr.Markdown("*Start an episode*")
-                        gr.Markdown("### Status")
-                        status_box = gr.Textbox(value="Not started", interactive=False, lines=1, label="")
+                    pending_btn = gr.Button("Ask Question Template", size="sm")
+                    decision_btn = gr.Button("Final Decision Template", size="sm")
+                action_input = gr.Code(
+                    value=PENDING_TEMPLATE,
+                    language="json",
+                    label="Action",
+                    lines=8,
+                )
+                submit_btn = gr.Button("Submit Action", variant="secondary")
 
-                    with gr.Column(scale=2):
-                        gr.Markdown("### Conversation")
-                        chatbot = gr.Chatbot(
-                            label="ASHA Worker ↔ Agent",
-                            height=380,
-                        )
-                        gr.Markdown("### Action JSON")
-                        with gr.Row():
-                            pending_btn = gr.Button("Ask Question Template", size="sm")
-                            decision_btn = gr.Button("Final Decision Template", size="sm")
-                        action_input = gr.Code(
-                            value=PENDING_TEMPLATE,
-                            language="json",
-                            label="Action",
-                            lines=8,
-                        )
-                        submit_btn = gr.Button("Submit Action", variant="secondary")
+        feedback_box = gr.Markdown("*Feedback appears here after final decision*")
 
-                feedback_box = gr.Markdown("*Feedback appears here after final decision*")
-
-                gr.Markdown("""
+        gr.Markdown("""
 ---
 **referral_decision:** REFER_IMMEDIATELY | REFER_WITHIN_24H | TREAT_AT_HOME | MONITOR | PENDING
 
 Set PENDING + question to ask. Set a final decision to end the episode.
-                """)
+        """)
 
-                reset_btn.click(
-                    fn=reset_episode,
-                    inputs=[task_dropdown, seed_input],
-                    outputs=[chatbot, status_box, context_box],
-                )
-                submit_btn.click(
-                    fn=submit_action,
-                    inputs=[action_input, chatbot],
-                    outputs=[chatbot, status_box, feedback_box, action_input],
-                )
-                pending_btn.click(fn=lambda: PENDING_TEMPLATE, outputs=action_input)
-                decision_btn.click(fn=lambda: DECISION_TEMPLATE, outputs=action_input)
+        reset_btn.click(
+            fn=reset_episode,
+            inputs=[task_dropdown, seed_input],
+            outputs=[chatbot, status_box, context_box],
+        )
+        submit_btn.click(
+            fn=submit_action,
+            inputs=[action_input, chatbot],
+            outputs=[chatbot, status_box, feedback_box, action_input],
+        )
+        pending_btn.click(fn=lambda: PENDING_TEMPLATE, outputs=action_input)
+        decision_btn.click(fn=lambda: DECISION_TEMPLATE, outputs=action_input)
 
-            with gr.Tab("Training Results"):
-                gr.Markdown("""
-## GRPO Training Results — Qwen3-0.6B on ASHA Sahayak
+        gr.Markdown("---")
+        gr.Markdown("## Training Results")
+
+        gr.Markdown("""
+### GRPO Training Results — Qwen3-0.6B on ASHA Sahayak
 
 **Real training run · Colab L4 GPU · 200 steps · April 25, 2026**
 
@@ -212,13 +226,15 @@ Set PENDING + question to ask. Set a final decision to end the episode.
 | **Composite** | 100% | **0.31** | **0.75** | **+0.44** |
 
 The model learned the most on **referral correctness** (+0.53) and **concern identification** (+0.52) — exactly the clinically critical components. With proper JSON-structured output, all 4 reward components were trained effectively.
-                """)
-                gr.Image(
-                    value="assets/training_reward_curve.png",
-                    label="Episode Reward over 200 GRPO Training Steps",
-                    show_label=True,
-                )
-                gr.Markdown("""
+        """)
+
+        gr.Image(
+            value="assets/training_reward_curve.png",
+            label="Episode Reward over 200 GRPO Training Steps",
+            show_label=True,
+        )
+
+        gr.Markdown("""
 ### Before vs After Training
 
 | Clinical Scenario | Untrained Model | Trained Model |
@@ -235,11 +251,13 @@ The model learned to:
 - Distinguish REFER_IMMEDIATELY from TREAT_AT_HOME on danger signs
 - Avoid dangerous under-triage (sending emergency cases home)
 - Avoid over-triage (sending healthy newborns to hospital unnecessarily)
-                """)
+        """)
 
-            with gr.Tab("About"):
-                gr.Markdown("""
-## The Story
+        gr.Markdown("---")
+        gr.Markdown("## About")
+
+        gr.Markdown("""
+### The Story
 
 **The Scale.** India has 600 million rural citizens. Their first contact with healthcare is not a doctor —
 it is an ASHA worker: a woman from their own village, trained for 23 days, covering 200 households.
@@ -259,7 +277,7 @@ immediate referral. Ground truth: official Indian Government IMNCI protocol.
 
 ---
 
-## Environment Design
+### Environment Design
 
 | Feature | Detail |
 |---|---|
@@ -271,12 +289,12 @@ immediate referral. Ground truth: official Indian Government IMNCI protocol.
 | Curriculum | Multi-Armed Bandit adaptive sampling |
 | Multi-agent | ASHA Worker + PHC Doctor two-phase episodes |
 
-## Themes Claimed
+### Themes Claimed
 - **Theme 1** — Multi-Agent: ASHA Worker + PHC Doctor with information asymmetry
 - **Theme 3.1** — Tool Use: 5 deterministic clinical tools from NHM/IMNCI guidelines
 - **Theme 4** — Self-Improvement: Adaptive curriculum (Multi-Armed Bandit)
 
 *Ground truth: IMNCI Protocol, NHM Guidelines, JSSK, NTEP, NPCDCS — Government of India*
-                """)
+        """)
 
     return demo
