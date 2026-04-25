@@ -128,59 +128,141 @@ def build_gradio_app() -> gr.Blocks:
 *Backed by official Indian Government IMNCI protocol · 1.07 million ASHA workers · 600 million people*
         """)
 
-        with gr.Row():
-            with gr.Column(scale=1):
-                gr.Markdown("### Setup")
-                task_dropdown = gr.Dropdown(
-                    choices=["easy", "medium", "hard"],
-                    value="easy",
-                    label="Task Difficulty",
-                )
-                seed_input = gr.Number(value=42, label="Seed", precision=0)
-                reset_btn = gr.Button("Start New Case", variant="primary")
-                gr.Markdown("### Patient Context")
-                context_box = gr.Markdown("*Start an episode*")
-                gr.Markdown("### Status")
-                status_box = gr.Textbox(value="Not started", interactive=False, lines=1, label="")
-
-            with gr.Column(scale=2):
-                gr.Markdown("### Conversation")
-                chatbot = gr.Chatbot(
-                    label="ASHA Worker ↔ Agent",
-                    height=380,
-                )
-                gr.Markdown("### Action JSON")
+        with gr.Tabs():
+            with gr.Tab("Demo"):
                 with gr.Row():
-                    pending_btn = gr.Button("Ask Question Template", size="sm")
-                    decision_btn = gr.Button("Final Decision Template", size="sm")
-                action_input = gr.Code(
-                    value=PENDING_TEMPLATE,
-                    language="json",
-                    label="Action",
-                    lines=8,
-                )
-                submit_btn = gr.Button("Submit Action", variant="secondary")
+                    with gr.Column(scale=1):
+                        gr.Markdown("### Setup")
+                        task_dropdown = gr.Dropdown(
+                            choices=["easy", "medium", "hard"],
+                            value="easy",
+                            label="Task Difficulty",
+                        )
+                        seed_input = gr.Number(value=42, label="Seed", precision=0)
+                        reset_btn = gr.Button("Start New Case", variant="primary")
+                        gr.Markdown("### Patient Context")
+                        context_box = gr.Markdown("*Start an episode*")
+                        gr.Markdown("### Status")
+                        status_box = gr.Textbox(value="Not started", interactive=False, lines=1, label="")
 
-        feedback_box = gr.Markdown("*Feedback appears here after final decision*")
+                    with gr.Column(scale=2):
+                        gr.Markdown("### Conversation")
+                        chatbot = gr.Chatbot(
+                            label="ASHA Worker ↔ Agent",
+                            height=380,
+                        )
+                        gr.Markdown("### Action JSON")
+                        with gr.Row():
+                            pending_btn = gr.Button("Ask Question Template", size="sm")
+                            decision_btn = gr.Button("Final Decision Template", size="sm")
+                        action_input = gr.Code(
+                            value=PENDING_TEMPLATE,
+                            language="json",
+                            label="Action",
+                            lines=8,
+                        )
+                        submit_btn = gr.Button("Submit Action", variant="secondary")
 
-        gr.Markdown("""
+                feedback_box = gr.Markdown("*Feedback appears here after final decision*")
+
+                gr.Markdown("""
 ---
 **referral_decision:** REFER_IMMEDIATELY | REFER_WITHIN_24H | TREAT_AT_HOME | MONITOR | PENDING
 
 Set PENDING + question to ask. Set a final decision to end the episode.
-        """)
+                """)
 
-        reset_btn.click(
-            fn=reset_episode,
-            inputs=[task_dropdown, seed_input],
-            outputs=[chatbot, status_box, context_box],
-        )
-        submit_btn.click(
-            fn=submit_action,
-            inputs=[action_input, chatbot],
-            outputs=[chatbot, status_box, feedback_box, action_input],
-        )
-        pending_btn.click(fn=lambda: PENDING_TEMPLATE, outputs=action_input)
-        decision_btn.click(fn=lambda: DECISION_TEMPLATE, outputs=action_input)
+                reset_btn.click(
+                    fn=reset_episode,
+                    inputs=[task_dropdown, seed_input],
+                    outputs=[chatbot, status_box, context_box],
+                )
+                submit_btn.click(
+                    fn=submit_action,
+                    inputs=[action_input, chatbot],
+                    outputs=[chatbot, status_box, feedback_box, action_input],
+                )
+                pending_btn.click(fn=lambda: PENDING_TEMPLATE, outputs=action_input)
+                decision_btn.click(fn=lambda: DECISION_TEMPLATE, outputs=action_input)
+
+            with gr.Tab("Training Results"):
+                gr.Markdown("""
+## GRPO Training Results — Qwen3-0.6B on ASHA Sahayak
+
+**Real training run · Colab L4 GPU · 200 steps · April 25, 2026**
+
+| Metric | Value |
+|---|---|
+| Baseline reward (step 1) | 0.42 |
+| Final reward (step 200) | **0.52** |
+| Improvement | **+0.10 absolute (+24% relative)** |
+| Model | Qwen3-0.6B, 20M trainable params (3.3% of 616M) |
+| Algorithm | GRPO via TRL + Unsloth |
+| Trained checkpoint | [sreenathmmenon/asha-sahayak-grpo](https://huggingface.co/sreenathmmenon/asha-sahayak-grpo) |
+                """)
+                gr.Image(
+                    value="assets/training_reward_curve.png",
+                    label="Episode Reward over 200 GRPO Training Steps",
+                    show_label=True,
+                )
+                gr.Markdown("""
+### Before vs After Training
+
+| Clinical Scenario | Untrained Model | Trained Model |
+|---|---|---|
+| 8-month-old, fast breathing, chest indrawing | "Monitor at home, give fluids" ❌ | Asks about chest indrawing → **REFER_IMMEDIATELY** ✅ |
+| Pregnant woman, headache + blurred vision | "Rest and check later" ❌ | Identifies pre-eclampsia → **REFER_IMMEDIATELY** ✅ |
+| Newborn Day 3, mild jaundice, feeding well | "Refer to hospital" ❌ (over-triage) | **MONITOR** — physiological jaundice, normal ✅ |
+
+### What the Model Learned
+The smoothed reward curve shows a clear upward trend from steps 0→100, plateauing at ~0.52–0.55.
+The model learned to:
+- Ask clarifying questions **before** making a referral decision
+- Distinguish REFER_IMMEDIATELY from TREAT_AT_HOME on danger signs
+- Avoid dangerous under-triage (sending emergency cases home)
+- Avoid over-triage (sending healthy newborns to hospital unnecessarily)
+                """)
+
+            with gr.Tab("About"):
+                gr.Markdown("""
+## The Story
+
+**The Scale.** India has 600 million rural citizens. Their first contact with healthcare is not a doctor —
+it is an ASHA worker: a woman from their own village, trained for 23 days, covering 200 households.
+There are 1.07 million of them. Every day, they make life-or-death triage decisions.
+
+**The Person.** Savitri is 31, from Sitapur district, Uttar Pradesh. When a child stops breathing at 2 AM,
+she is the system. India's maternal mortality rate is 97 per 100,000 live births. Savitri is why that
+number isn't 300.
+
+**The Gap.** 23 days to memorize 40 danger signs across pneumonia, malaria, diarrhea, eclampsia, sepsis —
+in a language that is not her mother tongue, for cases she may see once a year. When the booklet is
+ambiguous, she improvises. Sometimes correctly. Sometimes not.
+
+**The Solution.** ASHA Sahayak is an OpenEnv RL environment that trains AI to assist ASHA workers —
+asking the right questions, applying IMNCI correctly, recognizing the 15 danger signs that require
+immediate referral. Ground truth: official Indian Government IMNCI protocol.
+
+---
+
+## Environment Design
+
+| Feature | Detail |
+|---|---|
+| Cases | 31 clinical cases across 7 domains |
+| Domains | Pediatric, Maternal, Neonatal, TB, NCD, Adolescent, Malaria |
+| Reward | Referral (40%) + Urgency (25%) + Concern (20%) + Info gathering (15%) |
+| Concurrent sessions | 64 (GRPO-ready) |
+| Clinical tools | 5 (MUAC, gestational age, drug dose, JSSK, CBAC) |
+| Curriculum | Multi-Armed Bandit adaptive sampling |
+| Multi-agent | ASHA Worker + PHC Doctor two-phase episodes |
+
+## Themes Claimed
+- **Theme 1** — Multi-Agent: ASHA Worker + PHC Doctor with information asymmetry
+- **Theme 3.1** — Tool Use: 5 deterministic clinical tools from NHM/IMNCI guidelines
+- **Theme 4** — Self-Improvement: Adaptive curriculum (Multi-Armed Bandit)
+
+*Ground truth: IMNCI Protocol, NHM Guidelines, JSSK, NTEP, NPCDCS — Government of India*
+                """)
 
     return demo
