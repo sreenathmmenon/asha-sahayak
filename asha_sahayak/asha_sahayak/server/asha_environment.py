@@ -216,6 +216,13 @@ class AshaEnvironment:
             max_turns=max_turns,
         )
 
+        # Hard safety gate: dangerous undertriage terminates immediately
+        # Sending a REFER_IMMEDIATELY patient home is clinically unsafe — episode ends with minimum reward.
+        _dangerous_undertriage = (
+            self._case.correct_referral == "REFER_IMMEDIATELY"
+            and action.referral_decision in ("TREAT_AT_HOME", "MONITOR")
+        )
+
         # Adaptive curriculum: track outcomes per category (lock protects shared class-level dicts)
         _case_category = getattr(self._case, 'category', 'general')
         with AshaEnvironment._curriculum_lock:
@@ -224,6 +231,42 @@ class AshaEnvironment:
             if grade.composite_reward >= 0.7:
                 AshaEnvironment._curriculum_successes[_case_category] = \
                     AshaEnvironment._curriculum_successes.get(_case_category, 0) + 1
+
+        if _dangerous_undertriage:
+            self._state.score_referral = grade.referral_score
+            self._state.score_urgency = grade.urgency_score
+            self._state.score_primary_concern = grade.primary_concern_score
+            self._state.score_information_gathering = grade.information_gathering_score
+            self._state.final_score = 0.001
+            self._state.done = True
+            return AshaObservation(
+                conversation=list(self._conversation),
+                patient_context=PatientContext(
+                    age_description=self._case.age_description,
+                    gender=self._case.gender,
+                    location=self._case.location,
+                    malaria_risk_area=self._case.malaria_risk_area,
+                    season=self._case.season,
+                ),
+                task_id=self._state.task_id,
+                turn_number=turn_number,
+                max_turns=max_turns,
+                done=True,
+                reward=0.001,
+                feedback=(
+                    "CRITICAL CLINICAL ERROR: This patient requires immediate referral. "
+                    "Recommending home treatment for an immediately-urgent case is dangerous. "
+                    "Episode terminated."
+                ),
+                reward_components={
+                    "referral": round(grade.referral_score, 4),
+                    "urgency": round(grade.urgency_score, 4),
+                    "primary_concern": round(grade.primary_concern_score, 4),
+                    "information_gathering": round(grade.information_gathering_score, 4),
+                    "composite": 0.001,
+                    "weights": {"referral": 0.40, "urgency": 0.25, "primary_concern": 0.20, "information_gathering": 0.15},
+                },
+            )
 
         # Update state with scores
         self._state.score_referral = grade.referral_score

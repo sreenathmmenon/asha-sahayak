@@ -199,3 +199,125 @@ def test_grader_no_question_penalty():
         max_turns=4,
     )
     assert grade.information_gathering_score == 0.2  # capped at 0.2
+
+
+# ---------------------------------------------------------------------------
+# Hard safety gate (Gap 1)
+# ---------------------------------------------------------------------------
+
+def test_dangerous_undertriage_terminates_episode():
+    """Dangerous undertriage (TREAT_AT_HOME for REFER_IMMEDIATELY case) must end episode instantly."""
+    # Clear curriculum state so case selection is purely seed-based (no weighted sampling)
+    AshaEnvironment._curriculum_attempts.clear()
+    AshaEnvironment._curriculum_successes.clear()
+
+    # seed=0 with no curriculum selects E01 (REFER_IMMEDIATELY) for easy difficulty
+    env = AshaEnvironment()
+    env.reset(task_id="easy", seed=0)
+    assert env._case.correct_referral == "REFER_IMMEDIATELY", (
+        f"Precondition failed: expected REFER_IMMEDIATELY, got {env._case.correct_referral} (case {env._case.case_id})"
+    )
+
+    obs = env.step(AshaAction(
+        referral_decision="TREAT_AT_HOME",
+        urgency="routine",
+        primary_concern="mild_cough",
+        action_items=[],
+        question=None,
+        confidence=0.5,
+    ))
+
+    assert obs.done is True, "Episode must terminate on dangerous undertriage"
+    assert obs.reward <= 0.01, f"Reward must be minimal, got {obs.reward}"
+    assert obs.feedback is not None and "CRITICAL" in obs.feedback, (
+        f"Feedback must contain 'CRITICAL', got: {obs.feedback}"
+    )
+
+
+# ---------------------------------------------------------------------------
+# Adaptive curriculum (Gap 2a)
+# ---------------------------------------------------------------------------
+
+def test_curriculum_weights_increase_after_failures():
+    """After repeated failures in a category, its MAB sampling weight must exceed baseline 0.3."""
+    # Clear shared curriculum state for isolation
+    AshaEnvironment._curriculum_attempts.clear()
+    AshaEnvironment._curriculum_successes.clear()
+
+    # Run 12 episodes on E01 (REFER_IMMEDIATELY) sending wrong answer → triggers hard gate → low reward
+    for _ in range(12):
+        env = AshaEnvironment()
+        env.reset(task_id="easy", seed=42)
+        env.step(AshaAction(
+            referral_decision="TREAT_AT_HOME",
+            urgency="routine",
+            primary_concern="mild_cough",
+            action_items=[],
+            question=None,
+            confidence=0.5,
+        ))
+
+    curriculum = AshaEnvironment.get_curriculum_state()
+    # At least one category should have weight > base 0.3 after repeated failures
+    max_weight = max(v["weight"] for v in curriculum.values())
+    assert max_weight > 0.3, (
+        f"Curriculum weight should exceed baseline 0.3 after failures, got max={max_weight}"
+    )
+
+
+# ---------------------------------------------------------------------------
+# Multi-agent episode path (Gap 2b)
+# ---------------------------------------------------------------------------
+
+def test_multi_agent_episode_path():
+    """End-to-end ASHA Worker → PHC Doctor episode must complete with a valid reward."""
+    try:
+        from asha_sahayak.server.multi_agent_env import MultiAgentAshaEnvironment
+        from asha_sahayak.models import PHCDoctorAction
+    except ImportError as e:
+        import pytest
+        pytest.skip(f"Multi-agent env not importable: {e}")
+
+    env = MultiAgentAshaEnvironment()
+    result = env.reset(task_id="easy", seed=42)
+
+    assert result["phase"] == "asha"
+    assert result["role"] == "asha_worker"
+
+    # Ask one clarifying question
+    asha_q = AshaAction(
+        referral_decision="PENDING",
+        urgency="unknown",
+        primary_concern="gathering_information",
+        action_items=[],
+        question="Does the child have any chest indrawing or fast breathing?",
+        confidence=0.5,
+    )
+    step1 = env.step_asha(asha_q)
+    assert step1["phase"] == "asha"
+
+    # Make a final ASHA decision to trigger handoff to doctor
+    asha_final = AshaAction(
+        referral_decision="REFER_IMMEDIATELY",
+        urgency="immediate",
+        primary_concern="severe_pneumonia",
+        action_items=["first_dose_antibiotic_before_transfer"],
+        question=None,
+        confidence=0.9,
+    )
+    step2 = env.step_asha(asha_final)
+    assert step2["phase"] == "doctor", f"Expected doctor phase, got: {step2['phase']}"
+    assert "referral_note" in step2
+
+    # Doctor makes disposition
+    doctor_action = PHCDoctorAction(
+        disposition="refer_to_fru",
+        rationale="Severe pneumonia requires FRU-level care.",
+        treatment="First dose antibiotic given",
+    )
+    final = env.step_doctor(doctor_action)
+
+    assert final["done"] is True
+    assert 0.0 < final["reward"] <= 1.0, f"Reward out of range: {final['reward']}"
+    assert "breakdown" in final
+    assert "doctor_score" in final["breakdown"]

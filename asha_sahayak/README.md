@@ -226,6 +226,21 @@ config = GRPOConfig(
 
 The reward curve shows a strong upward trend reaching **0.947 peak at step 189** — a +142% improvement over baseline. The model learned to output structured JSON decisions, ask clarifying questions before deciding, and correctly distinguish REFER_IMMEDIATELY from TREAT_AT_HOME based on IMNCI danger signs.
 
+### Held-Out Evaluation (Seeds 1000–1099)
+
+To verify the model generalizes beyond its 31 training cases, we evaluated the trained checkpoint on 100 held-out seeds never seen during training. Full results: [`assets/heldout_evaluation.json`](assets/heldout_evaluation.json).
+
+| Metric | Value |
+|---|---|
+| Held-out seeds | 1000–1099 (never seen during training) |
+| Episodes | 100 |
+| Mean reward | **0.43** |
+| Referral correctness | 0.70 |
+| Urgency accuracy | 0.48 |
+| Dangerous undertriage rate | **2%** (hard safety gate active) |
+
+Full results: [`assets/heldout_evaluation.json`](assets/heldout_evaluation.json).
+
 ### Before vs After — Clinical Decision Quality
 
 | Scenario | Untrained Model | Trained Model |

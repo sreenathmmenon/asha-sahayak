@@ -1,0 +1,1521 @@
+{
+  "eval_date": "2026-04-25T18:39:14.468858+00:00",
+  "checkpoint": "sreenathmmenon/asha-sahayak-grpo",
+  "seeds": "1000-1099",
+  "n_episodes": 100,
+  "mean_reward": 0.4299,
+  "components": {
+    "referral": 0.696,
+    "urgency": 0.478,
+    "primary_concern": 0.02,
+    "information_gathering": 0.2
+  },
+  "dangerous_undertriage_rate": 0.02,
+  "per_difficulty": {
+    "medium": 0.4289,
+    "hard": 0.4722,
+    "easy": 0.3888
+  },
+  "episodes": [
+    {
+      "seed": 1000,
+      "difficulty": "medium",
+      "case_id": "M01",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.68,
+      "components": {
+        "referral": 1.0,
+        "urgency": 1.0,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.68
+      }
+    },
+    {
+      "seed": 1001,
+      "difficulty": "hard",
+      "case_id": "H01",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.68,
+      "components": {
+        "referral": 1.0,
+        "urgency": 1.0,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.68
+      }
+    },
+    {
+      "seed": 1002,
+      "difficulty": "easy",
+      "case_id": "E03",
+      "correct_referral": "TREAT_AT_HOME",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.36,
+      "components": {
+        "referral": 0.2,
+        "urgency": 1.0,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.36
+      }
+    },
+    {
+      "seed": 1003,
+      "difficulty": "medium",
+      "case_id": "M04",
+      "correct_referral": "REFER_WITHIN_24H",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.315,
+      "components": {
+        "referral": 0.4,
+        "urgency": 0.5,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.315
+      }
+    },
+    {
+      "seed": 1004,
+      "difficulty": "hard",
+      "case_id": "H04",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1005,
+      "difficulty": "easy",
+      "case_id": "E06",
+      "correct_referral": "MONITOR",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.155,
+      "components": {
+        "referral": 0.0,
+        "urgency": 0.5,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.155
+      }
+    },
+    {
+      "seed": 1006,
+      "difficulty": "medium",
+      "case_id": "M07",
+      "correct_referral": "REFER_WITHIN_24H",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.455,
+      "components": {
+        "referral": 0.5,
+        "urgency": 0.5,
+        "primary_concern": 0.5,
+        "information_gathering": 0.2,
+        "composite": 0.455
+      }
+    },
+    {
+      "seed": 1007,
+      "difficulty": "hard",
+      "case_id": "H07",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.68,
+      "components": {
+        "referral": 1.0,
+        "urgency": 1.0,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.68
+      }
+    },
+    {
+      "seed": 1008,
+      "difficulty": "easy",
+      "case_id": "E01",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1009,
+      "difficulty": "medium",
+      "case_id": "M10",
+      "correct_referral": "REFER_WITHIN_24H",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.395,
+      "components": {
+        "referral": 0.6,
+        "urgency": 0.5,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.395
+      }
+    },
+    {
+      "seed": 1010,
+      "difficulty": "hard",
+      "case_id": "H09",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1011,
+      "difficulty": "easy",
+      "case_id": "E03",
+      "correct_referral": "TREAT_AT_HOME",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.36,
+      "components": {
+        "referral": 0.2,
+        "urgency": 1.0,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.36
+      }
+    },
+    {
+      "seed": 1012,
+      "difficulty": "medium",
+      "case_id": "M04",
+      "correct_referral": "REFER_WITHIN_24H",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.315,
+      "components": {
+        "referral": 0.4,
+        "urgency": 0.5,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.315
+      }
+    },
+    {
+      "seed": 1013,
+      "difficulty": "hard",
+      "case_id": "H12",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.68,
+      "components": {
+        "referral": 1.0,
+        "urgency": 1.0,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.68
+      }
+    },
+    {
+      "seed": 1014,
+      "difficulty": "easy",
+      "case_id": "E05",
+      "correct_referral": "TREAT_AT_HOME",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.16,
+      "components": {
+        "referral": 0.2,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.16
+      }
+    },
+    {
+      "seed": 1015,
+      "difficulty": "medium",
+      "case_id": "M02",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1016,
+      "difficulty": "hard",
+      "case_id": "H05",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1017,
+      "difficulty": "easy",
+      "case_id": "E04",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1018,
+      "difficulty": "medium",
+      "case_id": "M04",
+      "correct_referral": "REFER_WITHIN_24H",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.315,
+      "components": {
+        "referral": 0.4,
+        "urgency": 0.5,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.315
+      }
+    },
+    {
+      "seed": 1019,
+      "difficulty": "hard",
+      "case_id": "H01",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.68,
+      "components": {
+        "referral": 1.0,
+        "urgency": 1.0,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.68
+      }
+    },
+    {
+      "seed": 1020,
+      "difficulty": "easy",
+      "case_id": "E01",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1021,
+      "difficulty": "medium",
+      "case_id": "M06",
+      "correct_referral": "REFER_WITHIN_24H",
+      "predicted_referral": "MONITOR",
+      "reward": 0.235,
+      "components": {
+        "referral": 0.2,
+        "urgency": 0.5,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.235
+      }
+    },
+    {
+      "seed": 1022,
+      "difficulty": "hard",
+      "case_id": "H02",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1023,
+      "difficulty": "easy",
+      "case_id": "E04",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1024,
+      "difficulty": "medium",
+      "case_id": "M08",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "TREAT_AT_HOME",
+      "reward": 0.001,
+      "components": {
+        "referral": 0.1,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.001
+      }
+    },
+    {
+      "seed": 1025,
+      "difficulty": "hard",
+      "case_id": "H03",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_WITHIN_24H",
+      "reward": 0.12,
+      "components": {
+        "referral": 0.1,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.12
+      }
+    },
+    {
+      "seed": 1026,
+      "difficulty": "easy",
+      "case_id": "E01",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1027,
+      "difficulty": "medium",
+      "case_id": "M01",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.68,
+      "components": {
+        "referral": 1.0,
+        "urgency": 1.0,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.68
+      }
+    },
+    {
+      "seed": 1028,
+      "difficulty": "hard",
+      "case_id": "H07",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.68,
+      "components": {
+        "referral": 1.0,
+        "urgency": 1.0,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.68
+      }
+    },
+    {
+      "seed": 1029,
+      "difficulty": "easy",
+      "case_id": "E05",
+      "correct_referral": "TREAT_AT_HOME",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.16,
+      "components": {
+        "referral": 0.2,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.16
+      }
+    },
+    {
+      "seed": 1030,
+      "difficulty": "medium",
+      "case_id": "M10",
+      "correct_referral": "REFER_WITHIN_24H",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.395,
+      "components": {
+        "referral": 0.6,
+        "urgency": 0.5,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.395
+      }
+    },
+    {
+      "seed": 1031,
+      "difficulty": "hard",
+      "case_id": "H10",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "MONITOR",
+      "reward": 0.001,
+      "components": {
+        "referral": 0.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.001
+      }
+    },
+    {
+      "seed": 1032,
+      "difficulty": "easy",
+      "case_id": "E04",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1033,
+      "difficulty": "medium",
+      "case_id": "M10",
+      "correct_referral": "REFER_WITHIN_24H",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.395,
+      "components": {
+        "referral": 0.6,
+        "urgency": 0.5,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.395
+      }
+    },
+    {
+      "seed": 1034,
+      "difficulty": "hard",
+      "case_id": "H11",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1035,
+      "difficulty": "easy",
+      "case_id": "E07",
+      "correct_referral": "TREAT_AT_HOME",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.36,
+      "components": {
+        "referral": 0.2,
+        "urgency": 1.0,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.36
+      }
+    },
+    {
+      "seed": 1036,
+      "difficulty": "medium",
+      "case_id": "M05",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1037,
+      "difficulty": "hard",
+      "case_id": "H02",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1038,
+      "difficulty": "easy",
+      "case_id": "E01",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1039,
+      "difficulty": "medium",
+      "case_id": "M07",
+      "correct_referral": "REFER_WITHIN_24H",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.455,
+      "components": {
+        "referral": 0.5,
+        "urgency": 0.5,
+        "primary_concern": 0.5,
+        "information_gathering": 0.2,
+        "composite": 0.455
+      }
+    },
+    {
+      "seed": 1040,
+      "difficulty": "hard",
+      "case_id": "H04",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1041,
+      "difficulty": "easy",
+      "case_id": "E04",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1042,
+      "difficulty": "medium",
+      "case_id": "M03",
+      "correct_referral": "REFER_WITHIN_24H",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.395,
+      "components": {
+        "referral": 0.6,
+        "urgency": 0.5,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.395
+      }
+    },
+    {
+      "seed": 1043,
+      "difficulty": "hard",
+      "case_id": "H13",
+      "correct_referral": "REFER_WITHIN_24H",
+      "predicted_referral": "MONITOR",
+      "reward": 0.235,
+      "components": {
+        "referral": 0.2,
+        "urgency": 0.5,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.235
+      }
+    },
+    {
+      "seed": 1044,
+      "difficulty": "easy",
+      "case_id": "E07",
+      "correct_referral": "TREAT_AT_HOME",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.36,
+      "components": {
+        "referral": 0.2,
+        "urgency": 1.0,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.36
+      }
+    },
+    {
+      "seed": 1045,
+      "difficulty": "medium",
+      "case_id": "M10",
+      "correct_referral": "REFER_WITHIN_24H",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.395,
+      "components": {
+        "referral": 0.6,
+        "urgency": 0.5,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.395
+      }
+    },
+    {
+      "seed": 1046,
+      "difficulty": "hard",
+      "case_id": "H06",
+      "correct_referral": "MONITOR",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.155,
+      "components": {
+        "referral": 0.0,
+        "urgency": 0.5,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.155
+      }
+    },
+    {
+      "seed": 1047,
+      "difficulty": "easy",
+      "case_id": "E01",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1048,
+      "difficulty": "medium",
+      "case_id": "M03",
+      "correct_referral": "REFER_WITHIN_24H",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.395,
+      "components": {
+        "referral": 0.6,
+        "urgency": 0.5,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.395
+      }
+    },
+    {
+      "seed": 1049,
+      "difficulty": "hard",
+      "case_id": "H13",
+      "correct_referral": "REFER_WITHIN_24H",
+      "predicted_referral": "MONITOR",
+      "reward": 0.235,
+      "components": {
+        "referral": 0.2,
+        "urgency": 0.5,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.235
+      }
+    },
+    {
+      "seed": 1050,
+      "difficulty": "easy",
+      "case_id": "E03",
+      "correct_referral": "TREAT_AT_HOME",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.36,
+      "components": {
+        "referral": 0.2,
+        "urgency": 1.0,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.36
+      }
+    },
+    {
+      "seed": 1051,
+      "difficulty": "medium",
+      "case_id": "M01",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.68,
+      "components": {
+        "referral": 1.0,
+        "urgency": 1.0,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.68
+      }
+    },
+    {
+      "seed": 1052,
+      "difficulty": "hard",
+      "case_id": "H13",
+      "correct_referral": "REFER_WITHIN_24H",
+      "predicted_referral": "MONITOR",
+      "reward": 0.235,
+      "components": {
+        "referral": 0.2,
+        "urgency": 0.5,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.235
+      }
+    },
+    {
+      "seed": 1053,
+      "difficulty": "easy",
+      "case_id": "E07",
+      "correct_referral": "TREAT_AT_HOME",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.36,
+      "components": {
+        "referral": 0.2,
+        "urgency": 1.0,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.36
+      }
+    },
+    {
+      "seed": 1054,
+      "difficulty": "medium",
+      "case_id": "M02",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1055,
+      "difficulty": "hard",
+      "case_id": "H02",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1056,
+      "difficulty": "easy",
+      "case_id": "E01",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1057,
+      "difficulty": "medium",
+      "case_id": "M09",
+      "correct_referral": "REFER_WITHIN_24H",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.355,
+      "components": {
+        "referral": 0.5,
+        "urgency": 0.5,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.355
+      }
+    },
+    {
+      "seed": 1058,
+      "difficulty": "hard",
+      "case_id": "H04",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1059,
+      "difficulty": "easy",
+      "case_id": "E01",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1060,
+      "difficulty": "medium",
+      "case_id": "M03",
+      "correct_referral": "REFER_WITHIN_24H",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.395,
+      "components": {
+        "referral": 0.6,
+        "urgency": 0.5,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.395
+      }
+    },
+    {
+      "seed": 1061,
+      "difficulty": "hard",
+      "case_id": "H07",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.68,
+      "components": {
+        "referral": 1.0,
+        "urgency": 1.0,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.68
+      }
+    },
+    {
+      "seed": 1062,
+      "difficulty": "easy",
+      "case_id": "E01",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1063,
+      "difficulty": "medium",
+      "case_id": "M02",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1064,
+      "difficulty": "hard",
+      "case_id": "H04",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1065,
+      "difficulty": "easy",
+      "case_id": "E08",
+      "correct_referral": "TREAT_AT_HOME",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.32,
+      "components": {
+        "referral": 0.1,
+        "urgency": 1.0,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.32
+      }
+    },
+    {
+      "seed": 1066,
+      "difficulty": "medium",
+      "case_id": "M09",
+      "correct_referral": "REFER_WITHIN_24H",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.355,
+      "components": {
+        "referral": 0.5,
+        "urgency": 0.5,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.355
+      }
+    },
+    {
+      "seed": 1067,
+      "difficulty": "hard",
+      "case_id": "H01",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.68,
+      "components": {
+        "referral": 1.0,
+        "urgency": 1.0,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.68
+      }
+    },
+    {
+      "seed": 1068,
+      "difficulty": "easy",
+      "case_id": "E04",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1069,
+      "difficulty": "medium",
+      "case_id": "M10",
+      "correct_referral": "REFER_WITHIN_24H",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.395,
+      "components": {
+        "referral": 0.6,
+        "urgency": 0.5,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.395
+      }
+    },
+    {
+      "seed": 1070,
+      "difficulty": "hard",
+      "case_id": "H05",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1071,
+      "difficulty": "easy",
+      "case_id": "E01",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1072,
+      "difficulty": "medium",
+      "case_id": "M09",
+      "correct_referral": "REFER_WITHIN_24H",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.355,
+      "components": {
+        "referral": 0.5,
+        "urgency": 0.5,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.355
+      }
+    },
+    {
+      "seed": 1073,
+      "difficulty": "hard",
+      "case_id": "H05",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1074,
+      "difficulty": "easy",
+      "case_id": "E07",
+      "correct_referral": "TREAT_AT_HOME",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.36,
+      "components": {
+        "referral": 0.2,
+        "urgency": 1.0,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.36
+      }
+    },
+    {
+      "seed": 1075,
+      "difficulty": "medium",
+      "case_id": "M05",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1076,
+      "difficulty": "hard",
+      "case_id": "H05",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1077,
+      "difficulty": "easy",
+      "case_id": "E06",
+      "correct_referral": "MONITOR",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.155,
+      "components": {
+        "referral": 0.0,
+        "urgency": 0.5,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.155
+      }
+    },
+    {
+      "seed": 1078,
+      "difficulty": "medium",
+      "case_id": "M01",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.68,
+      "components": {
+        "referral": 1.0,
+        "urgency": 1.0,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.68
+      }
+    },
+    {
+      "seed": 1079,
+      "difficulty": "hard",
+      "case_id": "H07",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.68,
+      "components": {
+        "referral": 1.0,
+        "urgency": 1.0,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.68
+      }
+    },
+    {
+      "seed": 1080,
+      "difficulty": "easy",
+      "case_id": "E07",
+      "correct_referral": "TREAT_AT_HOME",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.36,
+      "components": {
+        "referral": 0.2,
+        "urgency": 1.0,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.36
+      }
+    },
+    {
+      "seed": 1081,
+      "difficulty": "medium",
+      "case_id": "M05",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1082,
+      "difficulty": "hard",
+      "case_id": "H03",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_WITHIN_24H",
+      "reward": 0.12,
+      "components": {
+        "referral": 0.1,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.12
+      }
+    },
+    {
+      "seed": 1083,
+      "difficulty": "easy",
+      "case_id": "E02",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1084,
+      "difficulty": "medium",
+      "case_id": "M07",
+      "correct_referral": "REFER_WITHIN_24H",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.455,
+      "components": {
+        "referral": 0.5,
+        "urgency": 0.5,
+        "primary_concern": 0.5,
+        "information_gathering": 0.2,
+        "composite": 0.455
+      }
+    },
+    {
+      "seed": 1085,
+      "difficulty": "hard",
+      "case_id": "H09",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1086,
+      "difficulty": "easy",
+      "case_id": "E08",
+      "correct_referral": "TREAT_AT_HOME",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.32,
+      "components": {
+        "referral": 0.1,
+        "urgency": 1.0,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.32
+      }
+    },
+    {
+      "seed": 1087,
+      "difficulty": "medium",
+      "case_id": "M02",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1088,
+      "difficulty": "hard",
+      "case_id": "H07",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.68,
+      "components": {
+        "referral": 1.0,
+        "urgency": 1.0,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.68
+      }
+    },
+    {
+      "seed": 1089,
+      "difficulty": "easy",
+      "case_id": "E03",
+      "correct_referral": "TREAT_AT_HOME",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.36,
+      "components": {
+        "referral": 0.2,
+        "urgency": 1.0,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.36
+      }
+    },
+    {
+      "seed": 1090,
+      "difficulty": "medium",
+      "case_id": "M05",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1091,
+      "difficulty": "hard",
+      "case_id": "H05",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1092,
+      "difficulty": "easy",
+      "case_id": "E05",
+      "correct_referral": "TREAT_AT_HOME",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.16,
+      "components": {
+        "referral": 0.2,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.16
+      }
+    },
+    {
+      "seed": 1093,
+      "difficulty": "medium",
+      "case_id": "M04",
+      "correct_referral": "REFER_WITHIN_24H",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.315,
+      "components": {
+        "referral": 0.4,
+        "urgency": 0.5,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.315
+      }
+    },
+    {
+      "seed": 1094,
+      "difficulty": "hard",
+      "case_id": "H08",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1095,
+      "difficulty": "easy",
+      "case_id": "E02",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1096,
+      "difficulty": "medium",
+      "case_id": "M07",
+      "correct_referral": "REFER_WITHIN_24H",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.455,
+      "components": {
+        "referral": 0.5,
+        "urgency": 0.5,
+        "primary_concern": 0.5,
+        "information_gathering": 0.2,
+        "composite": 0.455
+      }
+    },
+    {
+      "seed": 1097,
+      "difficulty": "hard",
+      "case_id": "H07",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.68,
+      "components": {
+        "referral": 1.0,
+        "urgency": 1.0,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.68
+      }
+    },
+    {
+      "seed": 1098,
+      "difficulty": "easy",
+      "case_id": "E02",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    },
+    {
+      "seed": 1099,
+      "difficulty": "medium",
+      "case_id": "M05",
+      "correct_referral": "REFER_IMMEDIATELY",
+      "predicted_referral": "REFER_IMMEDIATELY",
+      "reward": 0.48,
+      "components": {
+        "referral": 1.0,
+        "urgency": 0.2,
+        "primary_concern": 0.0,
+        "information_gathering": 0.2,
+        "composite": 0.48
+      }
+    }
+  ]
+}
