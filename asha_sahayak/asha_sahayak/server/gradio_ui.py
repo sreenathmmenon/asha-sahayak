@@ -252,37 +252,36 @@ Set `PENDING` + `question` to ask a clarifying question. Set a final decision to
 The model improved most on **referral correctness** (+0.53) and **concern identification** (+0.52) — the clinically critical components.
                 """)
 
-        gr.Image(
-            value="assets/training_comparison_overlaid.png",
-            label="Run 1 vs Run 2 — Overlaid on Same Axes",
-            show_label=True,
-        )
+        gr.Markdown("### Reward Curves — All 3 Training Runs")
 
         with gr.Row():
             with gr.Column():
                 gr.Image(
                     value="assets/training_reward_curve_run1.png",
-                    label="Run 1 | 200 steps | final ~0.52",
-                    show_label=True,
+                    show_label=False,
                 )
+                gr.Markdown("**Run 1** — 200 steps · Regex parsing · final ~0.52")
             with gr.Column():
                 gr.Image(
                     value="assets/training_reward_curve.png",
-                    label="Run 2 | 200 steps | final 0.75 ★ Best",
-                    show_label=True,
+                    show_label=False,
                 )
+                gr.Markdown("**Run 2 ★ Best** — 200 steps · JSON fix · final **0.75** · peak **0.947**")
             with gr.Column():
                 gr.Image(
                     value="assets/training_reward_curve_run3.png",
-                    label="Run 3 | 400 steps | final 0.66",
-                    show_label=True,
+                    show_label=False,
                 )
+                gr.Markdown("**Run 3** — 400 steps · Extended run · final 0.66 · peak **0.947**")
 
-        gr.Markdown("""
-> **Run 1 → Run 2:** Switched from regex to structured JSON output — unlocked the concern reward component (+0.52) and drove the overall reward from 0.52 → 0.75 (+142% over baseline).
+        gr.Markdown("*Run 1 vs Run 2: switching to structured JSON output unlocked the concern reward component (+0.52), driving reward from 0.52 → 0.75. Run 3 confirms the same 0.947 peak is consistently reachable.*")
 
-> **Run 2 → Run 3:** Extended to 400 steps. The model reached the same peak (0.947) confirming training consistency, with a final of 0.66 — slightly lower than Run 2, likely due to reward oscillation at longer horizons with a 0.6B model.
-        """)
+        gr.Markdown("### Run 1 vs Run 2 — Overlaid")
+        gr.Image(
+            value="assets/training_comparison_overlaid.png",
+            show_label=False,
+        )
+        gr.Markdown("*Gray = Run 1 (regex), Blue = Run 2 (JSON). Both on same axes.*")
 
         gr.Markdown("""
 ### Before vs After Training
