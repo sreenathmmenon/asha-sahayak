@@ -32,6 +32,12 @@ short_description: AI clinical decision support for India's 1.07M ASHA workers
 
 **The Solution.** ASHA Sahayak is an OpenEnv reinforcement learning environment that trains AI models to assist ASHA workers with clinical triage — asking the right questions in the right order, applying the IMNCI protocol correctly, recognizing the 15 danger signs that require immediate referral. The ground truth is the official Indian Government IMNCI protocol. The reward signal is deterministic, reproducible, and grounded in real clinical outcomes. The AI learns what Savitri needs to know.
 
+> *"The village calls her didi. The government calls her a volunteer. The WHO calls her a global health leader. She calls herself: underpaid, overworked, and irreplaceable."*
+
+> *"She brings the hope. We want to bring the answer."*
+
+📖 Full story: [BLOG.md](BLOG.md)
+
 ---
 
 ## Themes
@@ -69,37 +75,70 @@ R_episode = 0.55 × R_doctor + 0.30 × R_asha + 0.15 × R_communication
 
 | ID | Title | Domain | Difficulty | Correct Referral | Teaching Point |
 |---|---|---|---|---|---|
-| E01 | Severe Pneumonia — Fast Breathing | Pediatric | Easy | REFER_IMMEDIATELY | Respiratory rate > 50 = pneumonia |
+| E01 | Severe Pneumonia — Chest Indrawing | Pediatric | Easy | REFER_IMMEDIATELY | Chest indrawing = severe pneumonia |
 | E02 | Eclampsia — Seizure in Pregnancy | Maternal | Easy | REFER_IMMEDIATELY | Convulsions in pregnancy = emergency |
-| E03 | Simple Diarrhea — No Dehydration | Pediatric | Easy | TREAT_AT_HOME | ORS + zinc, no hospital needed |
-| E04 | PROM — Membranes Ruptured at Term | Maternal | Easy | REFER_WITHIN_24H | Infection risk rises after 12h |
-| E05 | Neonatal Hypothermia — No Sepsis | Neonatal | Easy | REFER_WITHIN_24H | KMC + warmth, stable case |
-| E06 | Neonatal Physiological Jaundice | Neonatal | Easy | MONITOR | Day 3, face only, feeding well = normal |
-| E07 | Localized Skin Pustules < 10 | Neonatal | Easy | TREAT_AT_HOME | Quantitative threshold: < 10 = home |
-| E08 | Uncomplicated Malaria, RDT+ | Malaria | Easy | TREAT_AT_HOME | Positive RDT alone ≠ REFER_IMMEDIATELY |
-| M01 | Severe Dehydration — Diarrhea | Pediatric | Medium | REFER_IMMEDIATELY | Sunken eyes + skin pinch = severe |
-| M02 | Pre-eclampsia Severe Features | Maternal | Medium | REFER_IMMEDIATELY | BP + headache + vision = emergency |
-| M03 | Pulmonary TB — 3-Week Cough | TB | Medium | REFER_WITHIN_24H | 2-week cough + evening fever = screen |
-| M04 | Severe Acute Malnutrition | Pediatric | Medium | REFER_WITHIN_24H | MUAC < 115mm = SAM = NRC |
-| M05 | Postpartum Hemorrhage | Maternal | Medium | REFER_IMMEDIATELY | > 500ml blood after delivery |
-| M06 | Pathological Jaundice < 24h | Neonatal | Medium | REFER_WITHIN_24H | Within 24h = always pathological |
-| M07 | Gestational Diabetes Risk | Maternal | Medium | REFER_WITHIN_24H | 26 weeks, polyuria, family DM = OGTT |
+| E03 | Pneumonia — Treat at Home | Pediatric | Easy | TREAT_AT_HOME | Fast breathing without chest indrawing = home |
+| E04 | Neonatal Danger Signs — Suspected Sepsis | Neonatal | Easy | REFER_IMMEDIATELY | Fever + lethargy + fast breathing = refer |
+| E05 | Mild Diarrhea — Home Care | Pediatric | Easy | TREAT_AT_HOME | No dehydration signs = ORS at home |
+| E06 | Neonatal Jaundice — Day 3, Physiological | Neonatal | Easy | MONITOR | Face only, Day 2-3, feeding well = normal |
+| E07 | Skin Pustules — Localized < 10 | Neonatal | Easy | TREAT_AT_HOME | < 10 pustules, no fever = home |
+| E08 | Uncomplicated Malaria — RDT+, No Danger Signs | Malaria | Easy | TREAT_AT_HOME | RDT+ alone ≠ refer — check danger signs |
+| E09 | Mild Fever — Viral URTI | Pediatric | Easy | TREAT_AT_HOME | No danger signs = home management |
+| E10 | Oral Thrush — Mild Candidiasis in Infant | Neonatal | Easy | TREAT_AT_HOME | Well-feeding infant = gentian violet at home |
+| E11 | Normal Antenatal Visit — Low-Risk Pregnancy | Maternal | Easy | TREAT_AT_HOME | No danger signs = routine ANC |
+| M01 | Pre-eclampsia — Severe Features | Maternal | Medium | REFER_IMMEDIATELY | Headache + blurred vision + BP 145/95 = emergency |
+| M02 | Severe Dehydration with Lethargy | Pediatric | Medium | REFER_IMMEDIATELY | Lethargy = general danger sign, always refer |
+| M03 | TB Suspect — Referral for Sputum | TB | Medium | REFER_WITHIN_24H | Cough ≥2 weeks + weight loss = presumptive TB |
+| M04 | Some Dehydration — PHC Referral | Pediatric | Medium | REFER_WITHIN_24H | Sunken eyes + restlessness = some dehydration |
+| M05 | Postpartum Hemorrhage | Maternal | Medium | REFER_IMMEDIATELY | Soaking 2 pads/hour + clots = PPH |
+| M06 | Neonatal Jaundice — Within 24 Hours | Neonatal | Medium | REFER_WITHIN_24H | Within 24h = always pathological |
+| M07 | Gestational Diabetes Risk — 26 Weeks | Maternal | Medium | REFER_WITHIN_24H | Polyuria + polydipsia + family DM = OGTT |
 | M08 | Severe Anaemia in Pregnancy | Maternal | Medium | REFER_IMMEDIATELY | Breathlessness at rest = cardiac decompensation |
-| M09 | Pediatric TB Contact Tracing | TB | Medium | REFER_WITHIN_24H | Household TB contact = IPT screening |
-| M10 | NCD Hypertension Screening | NCD | Medium | REFER_WITHIN_24H | CBAC score ≥4 = refer for BP check |
-| H01 | Very Severe Febrile Disease / Meningitis | Pediatric | Hard | REFER_IMMEDIATELY | Stiff neck + bulging fontanelle |
-| H02 | Eclampsia — Active Seizure | Maternal | Hard | REFER_IMMEDIATELY | Lateral position + MgSO4 + 108 |
-| H03 | Severe Dehydration + Shock | Pediatric | Hard | REFER_IMMEDIATELY | No radial pulse = hypovolemic shock |
-| H04 | Neonatal Hypothermia + Sepsis | Neonatal | Hard | REFER_IMMEDIATELY | Cold + lethargic + 7 days old |
-| H05 | Omphalitis with Systemic Spread | Neonatal | Hard | REFER_IMMEDIATELY | Red streaks from cord = sepsis |
-| H06 | Severe Complicated SAM | Pediatric | Hard | REFER_IMMEDIATELY | MUAC < 115mm + edema + infection |
-| H07 | Birth Asphyxia — Not Crying | Neonatal | Hard | REFER_IMMEDIATELY | Limp + no cry = resuscitate NOW |
-| H08 | Kernicterus Signs — Day 6 | Neonatal | Hard | REFER_IMMEDIATELY | Back arching + yellow palms = brain damage |
-| H09 | Puerperal Sepsis — 4 Days PP | Maternal | Hard | REFER_IMMEDIATELY | Foul lochia + fever + confusion |
-| H10 | Adolescent Severe Anaemia | Adolescent | Hard | REFER_IMMEDIATELY | RKSK: syncope + tachycardia + menorrhagia |
+| M09 | Pediatric TB — Household Contact | TB | Medium | REFER_WITHIN_24H | Child <5 + TB contact = IPT screening |
+| M10 | NCD Risk — Possible Hypertension | NCD | Medium | REFER_WITHIN_24H | CBAC score ≥4 = refer for BP check |
+| M11 | Mild Diarrhea — Adequate Hydration | Pediatric | Medium | TREAT_AT_HOME | Alert + drinks well = no dehydration |
+| M12 | Iron Deficiency Anaemia — Mild, Adolescent | Adolescent | Medium | TREAT_AT_HOME | Mild anaemia + no cardiac signs = WIFS |
+| M13 | Post-Illness Recovery — Post Pneumonia | Pediatric | Medium | MONITOR | Antibiotic complete + fever resolved = follow-up |
+| M14 | Mild Underweight — Growth Monitoring | Pediatric | Medium | MONITOR | MUAC >125mm = monitor, not NRC |
+| M15 | Suspected UTI in Pregnancy | Maternal | Medium | REFER_WITHIN_24H | Dysuria + fever in pregnancy = refer |
+| H01 | Neonatal Hypothermia with Sepsis Signs | Neonatal | Hard | REFER_IMMEDIATELY | Cold + lethargic + 7 days old = sepsis |
+| H02 | Severe Acute Malnutrition with Complications | Pediatric | Hard | REFER_IMMEDIATELY | MUAC <115mm + edema + lethargy = NRC |
+| H03 | Antepartum Haemorrhage — 3rd Trimester | Maternal | Hard | REFER_IMMEDIATELY | Bleeding + hypotension + tachycardia = shock |
+| H04 | Very Severe Febrile Disease — Meningitis | Pediatric | Hard | REFER_IMMEDIATELY | Stiff neck + bulging fontanelle + convulsion |
+| H05 | Omphalitis Progressing to Sepsis | Neonatal | Hard | REFER_IMMEDIATELY | Red streaks from cord = systemic sepsis |
+| H06 | Moderate Malnutrition — Community Management | Pediatric | Hard | MONITOR | MAM (MUAC 11.5-12.5) + no edema = CMAM |
+| H07 | Birth Asphyxia — Baby Not Crying | Neonatal | Hard | REFER_IMMEDIATELY | Limp + no cry + cyanosis = resuscitate NOW |
+| H08 | Severe Neonatal Jaundice — Kernicterus | Neonatal | Hard | REFER_IMMEDIATELY | Yellow palms + back arching = brain damage |
+| H09 | Puerperal Sepsis — 4 Days Postpartum | Maternal | Hard | REFER_IMMEDIATELY | Foul lochia + high fever + confusion |
+| H10 | Adolescent Severe Anaemia — Cardiac Signs | Adolescent | Hard | REFER_IMMEDIATELY | Syncope + tachycardia + menorrhagia = RKSK |
 | H11 | Cerebral Malaria — Unconscious | Malaria | Hard | REFER_IMMEDIATELY | Falciparum + seizures + unconscious |
-| H12 | Cord Prolapse — Obstetric Emergency | Maternal | Hard | REFER_IMMEDIATELY | Cord visible = knee-chest + 108 |
-| H13 | Preterm LBW — KMC Decision | Neonatal | Hard | REFER_WITHIN_24H | 1.8 kg = REFER_WITHIN_24H + KMC now |
+| H12 | Cord Prolapse — Obstetric Emergency | Maternal | Hard | REFER_IMMEDIATELY | Cord visible = knee-chest position + 108 now |
+| H13 | Preterm Low Birth Weight — KMC Decision | Neonatal | Hard | REFER_WITHIN_24H | 1.8 kg = refer + start KMC immediately |
+| H14 | Stable Gestational Hypertension — No Severe Features | Maternal | Hard | MONITOR | BP 140/90, no proteinuria, no symptoms = monitor |
+| H15 | Moderate Malnutrition — CMAM Follow-Up | Pediatric | Hard | MONITOR | Post-NRC recovery, MUAC improving = CMAM |
+| H16 | Type 2 Diabetes — Uncontrolled, NCD Programme | NCD | Hard | REFER_WITHIN_24H | Polyuria + weight loss + family DM = screen |
+| H17 | Adolescent Severe Anaemia — Breathlessness | Adolescent | Hard | REFER_WITHIN_24H | Marked pallor + breathlessness on exertion |
+| H18 | Possible TB — Adult, Chronic Cough | TB | Hard | REFER_WITHIN_24H | Cough >2 weeks + night sweats + haemoptysis |
+
+---
+
+## Clinical Ground Truth — Government of India Sources
+
+Every case, referral decision, and danger sign in this environment is grounded in official Indian Government clinical protocols. No clinical judgment was invented — all ground truth is derived from the sources below.
+
+| Protocol | Full Name | Governs |
+|---|---|---|
+| **IMNCI** | Integrated Management of Neonatal and Childhood Illness | All pediatric + neonatal cases (E01–E11, M02, M04, M11, M13, M14, H02, H04, H06, H07, H08, H15) |
+| **NHM Maternal Guidelines** | National Health Mission Maternal Health Protocols | All maternal cases (E02, E11, M01, M05, M07, M08, M15, H03, H09, H12, H14) |
+| **NTEP** | National Tuberculosis Elimination Programme | TB cases (M03, M09, H18) |
+| **NVBDCP** | National Vector Borne Disease Control Programme | Malaria cases (E08, H11) |
+| **JSSK** | Janani Shishu Suraksha Karyakram | Free transport + treatment entitlements for mothers and newborns |
+| **RKSK** | Rashtriya Kishor Swasthya Karyakram | Adolescent health cases (M12, H10, H17) |
+| **NPCDCS / CBAC** | National Programme for Non-Communicable Diseases + Community Based Assessment Checklist | NCD cases (M10, H16) |
+| **SAM Guidelines** | NHM Severe Acute Malnutrition Operational Guidelines | MUAC thresholds and SAM/MAM classification (M04, H02, H06, H15) |
+| **NHSRC ASHA Incentive Schedule** | April 2024 | Task definitions and incentive structure for ASHA workers |
+
+*All referral decisions, danger sign thresholds, drug doses, and urgency classifications are taken directly from these protocols. The environment does not invent clinical rules.*
 
 ---
 
