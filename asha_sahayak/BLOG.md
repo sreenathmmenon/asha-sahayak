@@ -42,6 +42,16 @@ The woman earning Rs. 232 a day. The world needs to learn from her.
 
 ---
 
+## Less Than a Cup of Coffee
+
+A cup of coffee in the United States costs between $5 and $6 — Rs. 420 to Rs. 500. An ASHA worker earns Rs. 232 a day. Less than that coffee.
+
+She is not an employee. She is classified as a "volunteer" — ineligible for minimum wages, provident fund, or maternity leave. She pays for her own phone, her own internet data, her own transport. She sometimes pays for medicines from her own pocket when the drug kit runs empty.
+
+In Kerala, 75,000 workers went on strike for 266 days — one of the longest public sector strikes in recent Indian history — asking to be called workers, not volunteers. *"Stop calling us volunteers. We are workers."*
+
+---
+
 ## The Gap — And Why It Costs Lives
 
 The IMNCI protocol is correct. The training is inadequate.
