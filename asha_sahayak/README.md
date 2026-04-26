@@ -15,7 +15,9 @@ short_description: AI clinical decision support for India's 1.07M ASHA workers
 > Meta PyTorch OpenEnv Hackathon x Scaler SST India 2026 — Grand Finale
 
 **🔗 HuggingFace Space**: https://huggingface.co/spaces/sreenathmmenon/asha-sahayak  
-**📓 Training Notebook**: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/training/asha_grpo_training.ipynb)  
+**📓 Training Notebook (clean, re-runnable)**: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/training/asha_grpo_training.ipynb)  
+**📓 Run 2 — 200 steps with outputs**: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/training/asha_grpo_training_with_outputs_run2_200steps.ipynb)  
+**📓 Run 3 — 400 steps with outputs**: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/training/asha_grpo_training_with_outputs_run3_400steps.ipynb)  
 **📝 Blog Post**: [BLOG.md](BLOG.md)
 
 ---
@@ -198,23 +200,30 @@ config = GRPOConfig(
 
 ## Results & Training Evidence
 
-### Reward Curves — GRPO Training (Qwen3-0.6B, 200 steps)
+### Reward Curves — GRPO Training (Qwen3-0.6B, 3 Runs)
 
 ![Run 1 vs Run 2 — Both Runs Overlaid](assets/training_comparison_overlaid.png)
-*Run 1 (gray) used regex parsing — concern component nearly always 0, modest gains. Run 2 (blue) switched to JSON output — unlocked all 4 reward components, reward jumped from 0.31 baseline to 0.947 peak (+142%).*
+*Run 1 (gray) used regex parsing — concern component nearly always 0. Run 2 (blue) switched to JSON output — unlocked all 4 reward components, jumped from 0.31 baseline to 0.947 peak (+142%).*
+
+| Metric | Run 1 — 200 steps | Run 2 — 200 steps | Run 3 — 400 steps |
+|---|---|---|---|
+| Baseline reward | ~0.47 | 0.31 | 0.14 |
+| Final reward | ~0.52 | **0.75** | 0.66 |
+| Peak reward | ~0.75 | **0.947** | **0.947** |
+| Colab notebook | — | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/training/asha_grpo_training_with_outputs_run2_200steps.ipynb) | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/training/asha_grpo_training_with_outputs_run3_400steps.ipynb) |
+
+**Best result (Run 2):** baseline 0.31 → final **0.75** → peak **0.947** · +142% improvement  
+**Run 3 confirms:** same 0.947 peak reached at 400 steps — consistent training signal across runs.
 
 ![Run 2 — Training Reward Curve](assets/training_reward_curve.png)
-*Run 2 detailed view: baseline 0.31, strong upward trend steps 0→100, peak 0.947 at step 189, final 0.75.*
+*Run 2: baseline 0.31, strong upward trend steps 0→100, peak 0.947, final 0.75.*
 
-**Real training run — 200 GRPO steps, April 25 2026.**
+![Run 3 — Training Reward Curve (400 steps)](assets/training_reward_curve_run3.png)
+*Run 3: 400 steps, peak 0.947 — confirming training consistency at extended horizon.*
 
-| Metric | Value |
-|---|---|
-| Baseline reward (step 1) | 0.31 |
-| Final reward (step 200) | **0.75** |
-| Peak reward | **0.947** (step 189) |
-| Improvement | **+0.44 absolute (+142% relative)** |
 | Model | Qwen3-0.6B, 20M trainable params (3.3%) |
+|---|---|
+| Algorithm | GRPO via TRL + Unsloth · NVIDIA L4 |
 | Trained checkpoint | [sreenathmmenon/asha-sahayak-grpo](https://huggingface.co/sreenathmmenon/asha-sahayak-grpo) |
 
 | Reward Component | Weight | Baseline | Trained | Δ |
@@ -249,10 +258,14 @@ Full results: [`assets/heldout_evaluation.json`](assets/heldout_evaluation.json)
 | Pregnant woman, headache + blurred vision | "Rest and check later" ❌ | Identifies pre-eclampsia → REFER_IMMEDIATELY ✅ |
 | Newborn, Day 3 jaundice, feeding well | "Refer to hospital" ❌ (over-triage) | MONITOR — physiological jaundice, normal ✅ |
 
-### Run 1 vs Run 2 — What Changed
+### All 3 Runs — What Changed
 
 ![Run 1 Training Curve](assets/training_reward_curve_run1.png)
-*Run 1 (baseline): regex concern extraction — model output not matching regex defaulted to "general", concern reward ≈0. Baseline ~0.47, final ~0.52 — weak signal.*
+*Run 1: regex concern extraction — model output not matching regex defaulted to "general", concern reward ≈0. Baseline ~0.47, final ~0.52.*
+
+**Run 1 → Run 2:** Switched to structured JSON output + JSON parsing. Unlocked the concern reward component (+0.52). Overall reward 0.52 → 0.75.
+
+**Run 2 → Run 3:** Extended to 400 steps. Same peak (0.947) confirmed — training signal is consistent. Final settled at 0.66 due to reward oscillation at longer horizons with a 0.6B model.
 
 ### Multi-Agent Episode Reward Breakdown
 
@@ -268,12 +281,13 @@ Full results: [`assets/heldout_evaluation.json`](assets/heldout_evaluation.json)
 | Hard | 500 | ~0.999 | Correctly handles neonatal emergencies and cord prolapse |
 | **Overall** | — | **~0.849** | **Round 1 submission score** |
 
-### Training Notebook
+### Training Notebooks
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/training/asha_grpo_training.ipynb)
-
-Full GRPO training notebook: [`training/asha_grpo_training.ipynb`](training/asha_grpo_training.ipynb)  
-Trains Qwen3-0.6B on ASHA Sahayak using HuggingFace TRL + Unsloth. 400 GRPO steps, 44 cases, 450 training seeds.
+| Notebook | Description | Colab |
+|---|---|---|
+| [`asha_grpo_training.ipynb`](training/asha_grpo_training.ipynb) | Clean, re-runnable by judges | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/training/asha_grpo_training.ipynb) |
+| [`...run2_200steps.ipynb`](training/asha_grpo_training_with_outputs_run2_200steps.ipynb) | Run 2 with full outputs — final 0.75, peak 0.947 | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/training/asha_grpo_training_with_outputs_run2_200steps.ipynb) |
+| [`...run3_400steps.ipynb`](training/asha_grpo_training_with_outputs_run3_400steps.ipynb) | Run 3 with full outputs — 400 steps, peak 0.947 | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/training/asha_grpo_training_with_outputs_run3_400steps.ipynb) |
 
 ### Blog Post
 

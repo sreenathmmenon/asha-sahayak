@@ -226,7 +226,7 @@ Set `PENDING` + `question` to ask a clarifying question. Set a final decision to
 | Baseline reward | ~0.47 | 0.31 | 0.14 |
 | Final reward | ~0.52 | **0.75** | 0.66 |
 | Peak reward | ~0.75 | **0.947** | **0.947** |
-| Notebook | — | [run2 results](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/asha_sahayak/training/asha_grpo_training_with_outputs_run2_200steps.ipynb) | [run3 results](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/asha_sahayak/training/asha_grpo_training_with_outputs_run3_400steps.ipynb) |
+| Notebook | — | [run2 results](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/training/asha_grpo_training_with_outputs_run2_200steps.ipynb) | [run3 results](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/training/asha_grpo_training_with_outputs_run3_400steps.ipynb) |
 
 **Best result (Run 2):** baseline 0.31 → final 0.75 → peak 0.947 · +142% improvement
 
