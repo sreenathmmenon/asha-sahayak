@@ -11,8 +11,7 @@ short_description: AI clinical decision support for India's 1.07M ASHA workers
 
 # ASHA Sahayak — AI Clinical Decision Support for Frontline Health Workers
 
-> **OpenEnv RL Environment** | Multi-Agent | Tool Use | Adaptive Curriculum  
-> Meta PyTorch OpenEnv Hackathon x Scaler SST India 2026 — Grand Finale
+> **OpenEnv RL Environment** | Multi-Agent | Tool Use | Adaptive Curriculum
 
 **🔗 HuggingFace Space**: https://huggingface.co/spaces/sreenathmmenon/asha-sahayak  
 **📓 Training Notebook (clean, re-runnable)**: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/asha_sahayak/training/asha_grpo_training.ipynb)  
@@ -372,5 +371,4 @@ uvicorn asha_sahayak.server.app:app --host 0.0.0.0 --port 7860
 
 ---
 
-*Ground truth source: Indian Government IMNCI Protocol, NHM Guidelines, NVBDCP, NTEP, JSSK, NPCDCS*  
-*Built for Meta PyTorch OpenEnv Hackathon x Scaler SST India 2026*
+*Ground truth source: Indian Government IMNCI Protocol, NHM Guidelines, NVBDCP, NTEP, JSSK, NPCDCS*

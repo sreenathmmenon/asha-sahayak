@@ -218,7 +218,7 @@ The least we can do is give her an answer.
 
 ---
 
-*ASHA Sahayak is an open-source reinforcement learning environment built on the Indian Government's IMNCI protocol. Trained model: [sreenathmmenon/asha-sahayak-grpo](https://huggingface.co/sreenathmmenon/asha-sahayak-grpo). Live demo: [ASHA Sahayak on Hugging Face Spaces](https://sreenathmmenon-asha-sahayak.hf.space). Built for the Meta PyTorch OpenEnv Hackathon 2026.*
+*ASHA Sahayak is an open-source reinforcement learning environment built on the Indian Government's IMNCI protocol. Trained model: [sreenathmmenon/asha-sahayak-grpo](https://huggingface.co/sreenathmmenon/asha-sahayak-grpo). Live demo: [ASHA Sahayak on Hugging Face Spaces](https://sreenathmmenon-asha-sahayak.hf.space).*
 
 ---
 
