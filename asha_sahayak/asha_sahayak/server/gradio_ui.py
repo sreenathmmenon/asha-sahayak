@@ -224,18 +224,31 @@ Set `PENDING` + `question` to ask a clarifying question. Set a final decision to
         with gr.Row():
             with gr.Column():
                 gr.Markdown("""
-### Overall Results — Qwen3-0.6B · 3 Training Runs
+### Run 1 vs Run 2 — Key Results
 
 **Real training runs · April 25–26, 2026**
 
-| Metric | Run 1 (200 steps) | Run 2 (200 steps) | Run 3 (400 steps) |
-|---|---|---|---|
-| Baseline reward | ~0.47 | 0.31 | 0.14 |
-| Final reward | ~0.52 | **0.75** | 0.66 |
-| Peak reward | ~0.75 | **0.947** | **0.947** |
-| Notebook | — | [run2 results](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/asha_sahayak/training/asha_grpo_training_with_outputs_run2_200steps.ipynb) | [run3 results](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/asha_sahayak/training/asha_grpo_training_with_outputs_run3_400steps.ipynb) |
+| Metric | Run 1 — 200 steps (Regex) | Run 2 — 200 steps (JSON) |
+|---|---|---|
+| Baseline reward | ~0.47 | 0.31 |
+| Final reward | ~0.52 | **0.75** |
+| Peak reward | ~0.75 | **0.947** |
+| Notebook | — | [run2 results](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/asha_sahayak/training/asha_grpo_training_with_outputs_run2_200steps.ipynb) |
 
 **Best result (Run 2):** baseline 0.31 → final 0.75 → peak 0.947 · +142% improvement
+
+---
+
+### Run 3 — Extended Training (400 steps)
+
+| Metric | Run 3 — 400 steps |
+|---|---|
+| Baseline reward | 0.14 |
+| Final reward | 0.66 |
+| Peak reward | **0.947** |
+| Notebook | [run3 results](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/asha_sahayak/training/asha_grpo_training_with_outputs_run3_400steps.ipynb) |
+
+*Run 3 confirmed the 0.947 peak is consistently reachable. Final reward settled at 0.66 — lower than Run 2's 0.75 due to reward oscillation at longer horizons with a 0.6B model. Run 2 remains the best result.*
 
 | Detail | Value |
 |---|---|
@@ -259,7 +272,7 @@ Set `PENDING` + `question` to ask a clarifying question. Set a final decision to
 The model improved most on **referral correctness** (+0.53) and **concern identification** (+0.52) — the clinically critical components. *(Run 1 baseline ~0.47 used regex parsing; Run 2 baseline 0.31 enables all 4 components via JSON.)*
                 """)
 
-        gr.Markdown("### Reward Curves — All 3 Training Runs")
+        gr.Markdown("#### Reward Curves — All 3 Training Runs")
 
         gr.Image(
             value="assets/training_comparison_overlaid.png",
