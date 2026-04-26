@@ -155,7 +155,13 @@ def build_gradio_app() -> gr.Blocks:
         """)
 
         gr.Markdown("## Interactive Demo", elem_classes=["section-header"])
-        gr.Markdown("*Select a difficulty, start a case, then submit actions as the AI agent. The ASHA worker responds based on the IMNCI clinical protocol.*")
+        gr.Markdown("""
+**You are the AI assistant helping an ASHA worker.**
+
+Savitri is a frontline health worker in rural India. She is standing in front of a patient right now. She describes what she sees — in Hindi and English. You ask her questions, gather clinical information, and make the referral decision. She is waiting for your answer.
+
+This is what our trained AI model does — in real time, for 1.07 million ASHA workers across India.
+        """)
 
         with gr.Row():
             with gr.Column(scale=1):

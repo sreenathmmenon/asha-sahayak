@@ -1,6 +1,10 @@
 # How to Use the ASHA Sahayak Demo
 
-This demo lets you play the role of an AI agent assisting an ASHA worker in rural India. You ask clinical questions, the ASHA worker responds, and you make a referral decision. The environment scores you based on the official Indian Government IMNCI protocol.
+**You are the AI assistant helping an ASHA worker.**
+
+Savitri is a frontline health worker in rural India. She is standing in front of a patient. She describes what she sees — in Hindi and English. You ask her questions, gather clinical information, and make the referral decision. She is waiting for your answer.
+
+This is exactly what our trained AI model does — ask the right questions, apply the IMNCI protocol, and make the safe clinical decision. This demo lets you experience that role yourself, and see how the environment scores each decision against the official Indian Government IMNCI protocol.
 
 ---
 
