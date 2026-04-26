@@ -63,7 +63,7 @@ R_episode = 0.55 × R_doctor + 0.30 × R_asha + 0.15 × R_communication
 
 ---
 
-## Case Catalog — 31 Cases, 7 Domains
+## Case Catalog — 44 Cases, 7 Domains
 
 | ID | Title | Domain | Difficulty | Correct Referral | Teaching Point |
 |---|---|---|---|---|---|
@@ -228,7 +228,7 @@ The reward curve shows a strong upward trend reaching **0.947 peak at step 189**
 
 ### Held-Out Evaluation (Seeds 1000–1099)
 
-To verify the model generalizes beyond its 31 training cases, we evaluated the trained checkpoint on 100 held-out seeds never seen during training. Full results: [`assets/heldout_evaluation.json`](assets/heldout_evaluation.json).
+To verify the model generalizes beyond its 44 training cases, we evaluated the trained checkpoint on 100 held-out seeds never seen during training. Full results: [`assets/heldout_evaluation.json`](assets/heldout_evaluation.json).
 
 | Metric | Value |
 |---|---|
@@ -273,7 +273,7 @@ Full results: [`assets/heldout_evaluation.json`](assets/heldout_evaluation.json)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/training/asha_grpo_training.ipynb)
 
 Full GRPO training notebook: [`training/asha_grpo_training.ipynb`](training/asha_grpo_training.ipynb)  
-Trains Qwen3-0.6B on ASHA Sahayak using HuggingFace TRL + Unsloth. 200 GRPO steps.
+Trains Qwen3-0.6B on ASHA Sahayak using HuggingFace TRL + Unsloth. 400 GRPO steps, 44 cases, 450 training seeds.
 
 ### Blog Post
 
