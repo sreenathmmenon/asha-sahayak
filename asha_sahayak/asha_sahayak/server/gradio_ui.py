@@ -185,7 +185,7 @@ This is what our trained AI model does — in real time, for 1.07 million ASHA w
                     height=380,
                 )
                 gr.Markdown("### Action JSON")
-                gr.Markdown("📖 New here? [How to use this demo + worked examples](https://github.com/sreenathmmenon/asha-sahayak/blob/main/asha_sahayak/USAGE.md)")
+                gr.Markdown("📖 New here? [How to use this demo + worked examples](https://huggingface.co/spaces/sreenathmmenon/asha-sahayak/blob/main/USAGE.md)")
                 with gr.Row():
                     pending_btn = gr.Button("Ask Question Template", size="sm")
                     decision_btn = gr.Button("Final Decision Template", size="sm")
