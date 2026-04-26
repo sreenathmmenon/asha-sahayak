@@ -276,12 +276,11 @@ The model improved most on **referral correctness** (+0.53) and **concern identi
 
         gr.Markdown("*Run 1 vs Run 2: switching to structured JSON output unlocked the concern reward component (+0.52), driving reward from 0.52 → 0.75. Run 3 confirms the same 0.947 peak is consistently reachable.*")
 
-        gr.Markdown("### Run 1 vs Run 2 — Overlaid")
         gr.Image(
             value="assets/training_comparison_overlaid.png",
             show_label=False,
         )
-        gr.Markdown("*Gray = Run 1 (regex), Blue = Run 2 (JSON). Both on same axes.*")
+        gr.Markdown("*Run 1 vs Run 2 overlaid on same axes — Gray = Run 1 (regex), Blue = Run 2 (JSON).*")
 
         gr.Markdown("""
 ### Before vs After Training
