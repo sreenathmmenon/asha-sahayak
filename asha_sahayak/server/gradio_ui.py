@@ -144,7 +144,7 @@ _DIVIDER = "<div style='margin: 36px 0; border-top: 2px solid #e5e7eb;'></div>"
 
 
 def build_gradio_app() -> gr.Blocks:
-    with gr.Blocks(title="ASHA Sahayak", theme=gr.themes.Soft(), css=_CSS) as demo:
+    with gr.Blocks(title="ASHA Sahayak") as demo:
 
         gr.Markdown("""
 # ASHA Sahayak — AI Clinical Decision Support
