@@ -40,6 +40,18 @@ short_description: AI clinical decision support for India's 1.07M ASHA workers
 
 ---
 
+## Live Demo
+
+![Demo — Case Started](assets/ui_demo_step1_case_started.png)
+*The AI assistant asks questions, the ASHA worker responds in Hindi + English. Medium difficulty, seed 123.*
+
+![Demo — Score 0.950](assets/ui_demo_step4_result.png)
+*Episode complete — Score 0.950. Correct referral decision with full clinical explanation from IMNCI protocol.*
+
+📖 Full walkthrough with step-by-step instructions: [USAGE.md](USAGE.md)
+
+---
+
 ## Results & Training Evidence
 
 ### GRPO Training — Qwen3-0.6B, 3 Runs

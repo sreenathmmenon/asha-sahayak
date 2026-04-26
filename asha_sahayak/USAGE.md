@@ -100,6 +100,8 @@ This is exactly what our trained AI model does — ask the right questions, appl
 > 2 saal ka bacha. 2 din se dast hai. Bahut restless ho gaya hai.
 > [2-year-old child. Has had diarrhea for 2 days. Became very restless.]
 
+![Step 1 — Case started](assets/ui_demo_step1_case_started.png)
+
 **Question 1:**
 ```json
 {
@@ -111,6 +113,8 @@ This is exactly what our trained AI model does — ask the right questions, appl
 }
 ```
 **ASHA Worker:** Drinks eagerly — as soon as you offer water he grabs it.
+
+![Step 2 — First question answered](assets/ui_demo_step2_question1.png)
 
 **Question 2:**
 ```json
@@ -124,6 +128,8 @@ This is exactly what our trained AI model does — ask the right questions, appl
 ```
 **ASHA Worker:** Eyes look slightly sunken — not normal.
 
+![Step 3 — Second question answered](assets/ui_demo_step3_question2.png)
+
 **Final decision:**
 ```json
 {
@@ -136,6 +142,10 @@ This is exactly what our trained AI model does — ask the right questions, appl
 ```
 
 **Score: 0.950** — Near perfect. Here's why:
+
+![Step 4 — Score and breakdown](assets/ui_demo_step4_result.png)
+
+![Step 5 — Clinical explanation](assets/ui_demo_step5_explanation.png)
 
 > IMNCI: SOME DEHYDRATION — restlessness + sunken eyes + drinks eagerly (3 signs in 'some' category). No lethargy = NOT severe. Refer to PHC for supervised ORS.
 
