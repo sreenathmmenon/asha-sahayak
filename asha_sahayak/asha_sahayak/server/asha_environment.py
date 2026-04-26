@@ -18,6 +18,9 @@ import threading
 import uuid
 from typing import Optional
 
+from openenv_core import Environment
+from openenv.core.env_server.types import EnvironmentMetadata
+
 from ..models import (
     AshaAction,
     AshaObservation,
@@ -36,7 +39,7 @@ MAX_TURNS = {
 }
 
 
-class AshaEnvironment:
+class AshaEnvironment(Environment):
     """
     OpenEnv-compatible environment for ASHA worker clinical decision support.
     Each episode = one patient case. Multi-turn conversation.
@@ -56,6 +59,21 @@ class AshaEnvironment:
         self._case: Optional[ClinicalCase] = None
         self._conversation: list[ConversationTurn] = []
         self._asked_any_question: bool = False
+
+    def get_metadata(self) -> EnvironmentMetadata:
+        return EnvironmentMetadata(
+            name="asha_sahayak",
+            description=(
+                "AI clinical decision support for ASHA workers in rural India. "
+                "Multi-turn triage RL environment backed by official Indian Government IMNCI protocol."
+            ),
+            version="0.1.0",
+        )
+
+    def close(self) -> None:
+        self._state = None
+        self._case = None
+        self._conversation = []
 
     # ------------------------------------------------------------------
     # reset() — start a new episode
