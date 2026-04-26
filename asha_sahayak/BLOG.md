@@ -200,12 +200,12 @@ The least we can do is give her an answer.
 *A note on Champa Devi: she is a composite figure drawn from the documented accounts of real ASHA workers — Archana Tamdalge, Kenjir Perme, Rohini Pawar, Rathnamma P., and others whose testimonies appear in the sources below. Her story is true. Her name is shared.*
 
 **Sources:**
-- WHO Global Health Leaders Award 2022: nhsrcindia.org
-- Kerala ASHA Strike: theindiaforum.in, globalvoices.org
-- Maternal mortality and institutional delivery data: National Health Mission, WHO India
-- COVID-19 ASHA deaths: Time Magazine, Maharashtra government figures
-- Melinda Gates quote: CNN News18, gatesfoundation.org
-- ASHA daily life accounts: Gavi, The Wire, New Lines Magazine
-- Rural doctor shortfall: NHM Rural Health Statistics 2022
-- Polio eradication: WHO India
-- ASHA incentive structure: NHSRC April 2024 schedule
+- WHO Global Health Leaders Award 2022: [nhsrcindia.org](https://nhsrcindia.org)
+- Kerala ASHA Strike: [theindiaforum.in](https://www.theindiaforum.in), [globalvoices.org](https://globalvoices.org)
+- Maternal mortality and institutional delivery data: [National Health Mission](https://nhm.gov.in), [WHO India](https://www.who.int/india)
+- COVID-19 ASHA deaths: [Time Magazine](https://time.com), [Maharashtra government figures](https://arogya.maharashtra.gov.in)
+- Melinda Gates quote: [CNN News18](https://www.news18.com), [gatesfoundation.org](https://www.gatesfoundation.org)
+- ASHA daily life accounts: [Gavi](https://www.gavi.org), [The Wire](https://thewire.in), [New Lines Magazine](https://newlinesmag.com)
+- Rural doctor shortfall: [NHM Rural Health Statistics 2022](https://nhm.gov.in/index1.php?lang=1&level=0&linkid=1043&lid=534)
+- Polio eradication: [WHO India](https://www.who.int/india/news/detail/27-03-2014-india-s-polio-free-status)
+- ASHA incentive structure: [NHSRC April 2024 schedule](https://nhsrcindia.org)
