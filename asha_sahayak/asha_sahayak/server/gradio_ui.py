@@ -272,7 +272,7 @@ The model improved most on **referral correctness** (+0.53) and **concern identi
                     value="assets/training_reward_curve.png",
                     show_label=False,
                 )
-                gr.Markdown("**Run 2 ★ Best** — 200 steps · JSON fix · final **0.75** · peak **0.947**")
+                gr.Markdown("**Run 2 ★** — 200 steps · JSON fix · final **0.75** · peak **0.947**")
             with gr.Column():
                 gr.Image(
                     value="assets/training_reward_curve_run3.png",

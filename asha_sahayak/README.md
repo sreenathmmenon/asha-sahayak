@@ -324,7 +324,7 @@ Full results: [`assets/heldout_evaluation.json`](assets/heldout_evaluation.json)
 
 | Notebook | Description | Colab |
 |---|---|---|
-| [`asha_grpo_training.ipynb`](training/asha_grpo_training.ipynb) | Clean, re-runnable by judges | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/training/asha_grpo_training.ipynb) |
+| [`asha_grpo_training.ipynb`](training/asha_grpo_training.ipynb) | Clean, re-runnable | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/training/asha_grpo_training.ipynb) |
 | [`...run2_200steps.ipynb`](training/asha_grpo_training_with_outputs_run2_200steps.ipynb) | Run 2 with full outputs — final 0.75, peak 0.947 | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/training/asha_grpo_training_with_outputs_run2_200steps.ipynb) |
 | [`...run3_400steps.ipynb`](training/asha_grpo_training_with_outputs_run3_400steps.ipynb) | Run 3 with full outputs — 400 steps, peak 0.947 | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/training/asha_grpo_training_with_outputs_run3_400steps.ipynb) |
 
@@ -366,15 +366,6 @@ uvicorn asha_sahayak.server.app:app --host 0.0.0.0 --port 7860
 | `/multi/observations` | GET | Role-scoped observations for both agents |
 
 ---
-
-## Why ASHA Sahayak Wins
-
-| Criterion | ASHA Sahayak |
-|---|---|
-| **Innovation** | 3 themes claimed: Multi-Agent, Tool Use, Adaptive Curriculum. 7 clinical domains. Real Indian government protocols. |
-| **Storytelling** | 1.07M real workers. 600M rural Indians. 97/100,000 maternal mortality. Savitri at 2 AM. |
-| **Reward Improvement** | GRPO-ready with 64 concurrent sessions. Adaptive curriculum targets failure modes. |
-| **Pipeline** | OpenEnv validated. Docker deployed. HuggingFace Space live. Full API. |
 
 ---
 
