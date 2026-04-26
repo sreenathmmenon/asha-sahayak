@@ -1,14 +1,3 @@
----
-title: ASHA Sahayak
-emoji: 🏥
-colorFrom: red
-colorTo: pink
-sdk: docker
-pinned: true
-license: apache-2.0
-short_description: AI clinical decision support for India's 1.07M ASHA workers
----
-
 # ASHA Sahayak — AI Clinical Decision Support for Frontline Health Workers
 
 > **OpenEnv RL Environment** | Multi-Agent | Tool Use | Adaptive Curriculum  
