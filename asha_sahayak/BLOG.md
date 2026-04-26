@@ -123,7 +123,9 @@ We trained Qwen3-0.6B (600 million parameters, 3.3% of parameters actually train
 ![Clinical explanation grounded in IMNCI protocol](assets/ui_demo_step5_explanation.png)
 *The environment scores every decision against the official Indian Government IMNCI protocol — referral correctness, urgency, clinical concern, and quality of questioning.*
 
-The same 0.947 peak was reached consistently across Run 2 and Run 3 — confirming the training signal is stable and reproducible.
+Run 2 was the breakthrough. Run 3 was the confirmation.
+
+Extending to 400 steps in Run 3 confirmed that the 0.947 peak is consistently reachable — the training signal is real and stable, not a lucky spike. But the final reward at 400 steps settled at 0.66, lower than Run 2's 0.75. What this tells us: at longer training horizons, a 600M parameter model begins to oscillate — it learns the right behavior, overshoots, and partially forgets. The peak is there. Holding it requires either a larger model or better regularization. That is the next step.
 
 ### Multi-Agent Design (Two Roles, One Episode)
 
