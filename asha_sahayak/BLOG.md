@@ -166,9 +166,17 @@ That uncertainty is the gap. That uncertainty costs lives.
 
 So we built ASHA Sahayak — *Hope's Helper*.
 
+![ASHA Sahayak Demo — AI asking clinical questions](assets/ui_demo_step1_case_started.png)
+*The AI assistant asks Savitri questions about the patient. She responds in Hindi and English. The AI gathers information and makes the referral decision.*
+
 ASHA Sahayak is a reinforcement learning environment trained on the Indian Government's IMNCI protocol — the Integrated Management of Neonatal and Childhood Illness guidelines that form the clinical backbone of what ASHA workers are supposed to know. We built 44 clinical cases across 7 domains: pediatric, maternal, neonatal, tuberculosis, malaria, non-communicable diseases, adolescent health. We designed a reward system that scores not just the final referral decision, but the quality of the questions asked along the way — because a good ASHA worker doesn't just make decisions, she gathers information first.
 
 We trained a small language model — Qwen3-0.6B, 600 million parameters — using GRPO, a reinforcement learning algorithm, against this environment. The model started at a baseline reward of 0.31. After training, it reached a final reward of 0.75 — with a peak of 0.947 on the hardest cases. A 142% improvement. Not on a benchmark. On cases modeled after real children, real mothers, real nights in real villages.
+
+![Score 0.950 — Near perfect referral decision](assets/ui_demo_step4_result.png)
+
+![Clinical explanation grounded in IMNCI protocol](assets/ui_demo_step5_explanation.png)
+*The environment scores every decision against the official Indian Government IMNCI protocol — referral correctness, urgency, clinical concern, and quality of questioning.*
 
 It is the difference between a model that sends a child with chest indrawing home to rest, and a model that asks the right question, identifies the danger sign, and says: refer immediately.
 
