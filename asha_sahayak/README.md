@@ -265,12 +265,17 @@ config = GRPOConfig(
 | Algorithm | GRPO via TRL + Unsloth · NVIDIA L4 |
 | Trained checkpoint | [sreenathmmenon/asha-sahayak-grpo](https://huggingface.co/sreenathmmenon/asha-sahayak-grpo) |
 
+**Per-component breakdown — Run 2 (baseline 0.31 → trained 0.75):**
+
 | Reward Component | Weight | Baseline | Trained | Δ |
 |---|---|---|---|---|
 | Referral correctness | 40% | 0.18 | 0.71 | **+0.53** |
 | Urgency accuracy | 25% | 0.22 | 0.68 | **+0.46** |
 | Primary concern ID | 20% | 0.09 | 0.61 | **+0.52** |
 | Information gathering | 15% | 0.91 | 0.95 | **+0.04** |
+| **Composite** | | **0.31** | **0.75** | **+0.44** |
+
+*Run 1 baseline ~0.47 reflects regex-only parsing where the concern component was mostly unscored; Run 2 baseline 0.31 reflects structured JSON output enabling all 4 components to be measured.*
 
 The reward curve shows a strong upward trend reaching **0.947 peak at step 189** — a +142% improvement over baseline. The model learned to output structured JSON decisions, ask clarifying questions before deciding, and correctly distinguish REFER_IMMEDIATELY from TREAT_AT_HOME based on IMNCI danger signs.
 

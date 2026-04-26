@@ -239,7 +239,7 @@ Set `PENDING` + `question` to ask a clarifying question. Set a final decision to
 
             with gr.Column():
                 gr.Markdown("""
-### Per-Component Reward Breakdown
+### Per-Component Breakdown — Run 2
 
 | Component | Weight | Baseline | Trained | Δ |
 |---|---|---|---|---|
@@ -249,7 +249,7 @@ Set `PENDING` + `question` to ask a clarifying question. Set a final decision to
 | Info gathering | 15% | 0.91 | 0.95 | **+0.04** |
 | **Composite** | 100% | **0.31** | **0.75** | **+0.44** |
 
-The model improved most on **referral correctness** (+0.53) and **concern identification** (+0.52) — the clinically critical components.
+The model improved most on **referral correctness** (+0.53) and **concern identification** (+0.52) — the clinically critical components. *(Run 1 baseline ~0.47 used regex parsing; Run 2 baseline 0.31 enables all 4 components via JSON.)*
                 """)
 
         gr.Markdown("### Reward Curves — All 3 Training Runs")
