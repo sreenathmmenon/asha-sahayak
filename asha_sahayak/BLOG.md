@@ -1,6 +1,6 @@
-# She Wakes at 3:30 AM. She Earns Less Than a Cup of Coffee. She Is Why 600 Million People Are Alive.
+# ASHA Sahayak — AI Clinical Decision Support for India's 1.07 Million Frontline Health Workers
 
-### ASHA Sahayak — AI Clinical Decision Support for India's 1.07 Million Frontline Health Workers
+### *She Wakes at 3:30 AM. She Earns Less Than a Cup of Coffee. She Is Why 600 Million People Are Alive.*
 
 ---
 
