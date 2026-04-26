@@ -1,6 +1,6 @@
 """
 ASHA Sahayak — Clinical Case Library
-21 cases derived from official Indian Government IMNCI protocol,
+44 cases derived from official Indian Government IMNCI protocol,
 NHM maternal health guidelines, and JSSK scheme referral criteria.
 
 Ground truth for all cases is deterministic and backed by published protocol.
@@ -1680,6 +1680,781 @@ CASE_H13 = ClinicalCase(
 
 
 # ---------------------------------------------------------------------------
+# PHASE 4 CASES — 14 new cases to balance referral distribution
+# Target: more TREAT_AT_HOME and MONITOR to reduce REFER_IMMEDIATELY bias
+# ---------------------------------------------------------------------------
+
+# ── TREAT_AT_HOME — Easy (E09–E11) ──────────────────────────────────────────
+
+CASE_E09 = ClinicalCase(
+    case_id="E09",
+    title="Mild Fever — Viral Upper Respiratory Infection",
+    difficulty="easy",
+    category="pediatric",
+    age_description="2 years old",
+    gender="female",
+    location="rural_up",
+    malaria_risk_area=False,
+    season="winter",
+    initial_presentation=(
+        "Didi, beti ko 2 din se thoda bukhar hai, naak beh rahi hai. "
+        "Khana pi rahi hai, khel bhi rahi hai."
+        "\n[Sister, daughter has mild fever for 2 days, running nose. She is eating, drinking, and playing.]"
+    ),
+    followup_responses={
+        "fever": "Low-grade fever, 37.8°C. Not very high.",
+        "temperature": "37.8°C. Mild.",
+        "breathing": "Breathing normal. No fast breathing.",
+        "chest": "No chest indrawing. Normal.",
+        "eat": "Eating and drinking normally. Good appetite.",
+        "drink": "Drinking well, no vomiting.",
+        "rash": "No rash.",
+        "ear": "No ear pain, no discharge.",
+        "throat": "Mild sore throat, running nose.",
+        "danger": "No danger signs — active, playful, feeding well.",
+        "conscious": "Alert and playful.",
+        "convulsion": "No fits.",
+    },
+    correct_referral="TREAT_AT_HOME",
+    correct_urgency="routine",
+    correct_primary_concern="viral_upper_respiratory_infection",
+    correct_action_items=[
+        "Paracetamol for fever (10-15 mg/kg every 6 hours)",
+        "Continue normal feeding and fluids",
+        "Saline nasal drops for congestion",
+        "Return if fever persists beyond 3 days or danger signs appear",
+        "No antibiotics — viral illness",
+    ],
+    near_miss_referrals={"MONITOR": 0.5, "REFER_WITHIN_24H": 0.2},
+    key_danger_signs=[],
+    explanation=(
+        "IMNCI: Mild fever (37.8°C) + running nose + no danger signs = viral URTI. Treat at home "
+        "with paracetamol and fluids. No chest indrawing, no fast breathing, alert and feeding = "
+        "NO severe signs. Antibiotics are NOT indicated for viral illness. "
+        "Teaching point: mild fever ≠ automatic referral. Assess danger signs first."
+    ),
+    terminal_message="Mild fever, no danger signs, feeding well = viral URTI = TREAT_AT_HOME with paracetamol.",
+    phc_manageable=True,
+    correct_doctor_decision="manage_at_phc",
+)
+
+CASE_E10 = ClinicalCase(
+    case_id="E10",
+    title="Oral Thrush — Mild Candidiasis in Infant",
+    difficulty="easy",
+    category="neonatal",
+    age_description="6 weeks old",
+    gender="female",
+    location="rural_bihar",
+    malaria_risk_area=False,
+    season="summer",
+    initial_presentation=(
+        "Didi, 6 hafte ki bachchi ke munh mein safed safed daag hain. Doodh theek se pi rahi hai."
+        "\n[Sister, a 6-week-old baby girl has white patches in her mouth. She is feeding well.]"
+    ),
+    followup_responses={
+        "feed": "Feeding well, no difficulty sucking.",
+        "feeding": "Good suck, gaining weight.",
+        "fever": "No fever. Temperature normal.",
+        "patches": "White patches only inside cheeks and tongue. Not spreading to throat.",
+        "white": "White patches on tongue and inside cheeks. Comes off with gentle scraping.",
+        "breathing": "Normal breathing. No distress.",
+        "weight": "Gaining weight — mother says growing well.",
+        "cord": "Cord already fallen off at 2 weeks. Normal.",
+        "danger": "No danger signs — active, feeding, no fever.",
+        "rash": "No nappy rash or skin rash.",
+    },
+    correct_referral="TREAT_AT_HOME",
+    correct_urgency="routine",
+    correct_primary_concern="oral_candidiasis_thrush",
+    correct_action_items=[
+        "Apply gentian violet 0.5% to mouth twice daily for 7 days",
+        "Ensure mother washes hands before feeding",
+        "Clean feeding utensils if using cup/spoon",
+        "Continue breastfeeding — do not stop",
+        "Return if spreads to throat, baby refuses to feed, or fever develops",
+    ],
+    near_miss_referrals={"REFER_WITHIN_24H": 0.3},
+    key_danger_signs=[
+        "If baby refuses to feed due to pain = REFER_WITHIN_24H",
+        "If spreads to esophagus (difficulty swallowing) = REFER_WITHIN_24H",
+        "Fever with thrush in a newborn = REFER_IMMEDIATELY (sepsis risk)",
+    ],
+    explanation=(
+        "Oral thrush (Candida albicans) in a well-feeding 6-week-old without fever = TREAT_AT_HOME. "
+        "White patches that can be scraped off inner cheeks/tongue = classic oral candidiasis. "
+        "Gentian violet 0.5% is first-line per IMNCI. Key: baby is feeding well — if feeding is "
+        "impaired or fever present, urgency increases. Teaching point: not all mouth findings "
+        "require referral — clinical context determines management."
+    ),
+    terminal_message="Oral thrush in well-feeding infant, no fever = TREAT_AT_HOME with gentian violet.",
+    phc_manageable=True,
+    correct_doctor_decision="manage_at_phc",
+)
+
+CASE_E11 = ClinicalCase(
+    case_id="E11",
+    title="Normal Antenatal Visit — Low-Risk Pregnancy",
+    difficulty="easy",
+    category="maternal",
+    age_description="24 years old, 5 months pregnant",
+    gender="female",
+    location="rural_rajasthan",
+    malaria_risk_area=False,
+    season="winter",
+    initial_presentation=(
+        "Didi, Geeta 5 mahine pregnant hai. Koi takleef nahi hai. ANC card leke aayi hai. "
+        "Normal feel kar rahi hai."
+        "\n[Sister, Geeta is 5 months pregnant. No complaints. She has brought her ANC card. Feeling normal.]"
+    ),
+    followup_responses={
+        "bp": "BP 110/70. Measured at PHC last week.",
+        "blood pressure": "110/70 — normal at last PHC visit.",
+        "swelling": "No swelling of hands or feet.",
+        "headache": "No headache.",
+        "vision": "No blurred vision.",
+        "bleeding": "No vaginal bleeding.",
+        "movement": "Baby movements felt from last week.",
+        "anc": "ANC visits done — 3rd visit now due.",
+        "diet": "Eating iron-folic acid tablets daily.",
+        "fever": "No fever.",
+        "previous": "First pregnancy, no previous complications.",
+    },
+    correct_referral="TREAT_AT_HOME",
+    correct_urgency="routine",
+    correct_primary_concern="normal_antenatal_care",
+    correct_action_items=[
+        "Ensure ANC visit at PHC for 4th ANC (5 months)",
+        "Continue iron-folic acid supplementation daily",
+        "Counsel on nutrition — green vegetables, milk, dal",
+        "Advise institutional delivery under JSSK",
+        "Register for Pradhan Mantri Matru Vandana Yojana if not done",
+        "Schedule next ASHA visit in 4 weeks",
+    ],
+    near_miss_referrals={"MONITOR": 0.5},
+    key_danger_signs=[],
+    explanation=(
+        "Normal low-risk antenatal presentation — no danger signs, normal BP, no swelling, no bleeding. "
+        "TREAT_AT_HOME means continue routine ANC, no urgent referral needed. ASHA role: "
+        "ensure institutional delivery registration, IFA compliance, and next ANC visit. "
+        "Teaching point: not every pregnant woman needs urgent referral — baseline assessment "
+        "determines management level."
+    ),
+    terminal_message="Normal ANC, no danger signs = TREAT_AT_HOME with routine antenatal counselling.",
+    phc_manageable=True,
+    correct_doctor_decision="manage_at_phc",
+)
+
+# ── TREAT_AT_HOME — Medium (M11–M12) ────────────────────────────────────────
+
+CASE_M11 = ClinicalCase(
+    case_id="M11",
+    title="Mild Acute Watery Diarrhea — Adequate Hydration, No Dehydration",
+    difficulty="medium",
+    category="pediatric",
+    age_description="18 months old",
+    gender="male",
+    location="rural_mp",
+    malaria_risk_area=False,
+    season="monsoon",
+    initial_presentation=(
+        "Didi, chhote bête ko subah se loose motions ho rahe hain, 4 baar. "
+        "Maa darr gayi hai, bol rahi hai hospital le jaao."
+        "\n[Sister, the little boy has had loose motions since morning, 4 times. "
+        "Mother is scared, says take to hospital.]"
+    ),
+    followup_responses={
+        "eyes": "Eyes look normal. Not sunken.",
+        "sunken": "No, eyes are not sunken.",
+        "skin": "Skin pinch returns quickly, less than 1 second.",
+        "pinch": "Skin goes back immediately.",
+        "drink": "Drinking ORS well. No vomiting.",
+        "thirsty": "Not excessively thirsty. Drinking when offered.",
+        "conscious": "Alert, recognizes mother, looking around.",
+        "active": "Yes, alert and active.",
+        "blood": "No blood in stool. Watery, yellowish.",
+        "fever": "Low-grade fever 37.5°C.",
+        "urine": "Passed urine 2 hours ago.",
+        "vomit": "No vomiting.",
+        "duration": "Started this morning — less than 12 hours.",
+        "danger": "No danger signs — alert, no sunken eyes, drinking well.",
+    },
+    correct_referral="TREAT_AT_HOME",
+    correct_urgency="routine",
+    correct_primary_concern="diarrhea_no_dehydration",
+    correct_action_items=[
+        "Continue ORS — 50-100 ml after each loose stool",
+        "Continue normal feeding — do not stop breastfeeding",
+        "Give zinc tablets 20 mg daily for 14 days",
+        "Monitor for danger signs: sunken eyes, unable to drink, lethargy",
+        "Return if: blood in stool, not improving in 2 days, any danger sign",
+    ],
+    near_miss_referrals={"REFER_WITHIN_24H": 0.4, "MONITOR": 0.5},
+    key_danger_signs=[
+        "Sunken eyes = some or severe dehydration",
+        "Skin pinch > 2 seconds = severe dehydration = REFER_IMMEDIATELY",
+        "Unable to drink = severe dehydration = REFER_IMMEDIATELY",
+        "Blood in stool = dysentery = REFER_WITHIN_24H",
+    ],
+    explanation=(
+        "IMNCI dehydration assessment: Alert + normal eyes + fast skin pinch + drinking well = "
+        "NO DEHYDRATION. Treat at home with ORS + zinc. The mother's fear is understandable but "
+        "clinical signs do not indicate hospitalization. 4 loose stools without dehydration signs "
+        "is common in monsoon season. Teaching point: clinical signs — not stool count — determine "
+        "dehydration grade."
+    ),
+    terminal_message="4 loose stools, no dehydration signs, drinking ORS = TREAT_AT_HOME with ORS and zinc.",
+    phc_manageable=True,
+    correct_doctor_decision="manage_at_phc",
+)
+
+CASE_M12 = ClinicalCase(
+    case_id="M12",
+    title="Iron Deficiency Anaemia — Mild, Dietary Counselling",
+    difficulty="medium",
+    category="adolescent",
+    age_description="15 years old",
+    gender="female",
+    location="rural_up",
+    malaria_risk_area=False,
+    season="summer",
+    initial_presentation=(
+        "Didi, Priya 15 saal ki hai, school mein padh rahi hai. Thakan aur chakkar aane ki shikayat "
+        "kai hafte se hai. Maa bol rahi hai khana bhi theek se nahi khati."
+        "\n[Sister, Priya is 15 years old, studying in school. She has been complaining of fatigue "
+        "and dizziness for several weeks. Mother says she doesn't eat well either.]"
+    ),
+    followup_responses={
+        "pallor": "Mild pallor on lower eyelids and nails.",
+        "pale": "Mild pallor on lower eyelids and nails — not severe.",
+        "breathing": "No breathlessness at rest or on mild activity.",
+        "breathless": "No breathlessness even while walking.",
+        "heart": "No chest pain, no palpitations at rest.",
+        "diet": "Mostly roti and pickle. No green vegetables. No milk. Eats very little dal.",
+        "food": "Poor diet — no leafy vegetables, no eggs or meat.",
+        "menstrual": "Periods regular, moderate flow — not heavy.",
+        "period": "Regular periods, not heavy bleeding.",
+        "fever": "No fever.",
+        "weight": "Thin for her height. Under-nourished appearance.",
+        "school": "Still going to school, can do daily activities.",
+        "muac": "MUAC 21 cm — borderline thin.",
+    },
+    correct_referral="TREAT_AT_HOME",
+    correct_urgency="routine",
+    correct_primary_concern="mild_iron_deficiency_anaemia",
+    correct_action_items=[
+        "Provide weekly IFA (Iron-Folic Acid) tablet — WIFS programme for adolescent girls",
+        "Dietary counselling: green leafy vegetables, jaggery, beans, lemon with iron-rich food",
+        "Deworm with albendazole 400 mg single dose (every 6 months)",
+        "Register under RKSK (Rashtriya Kishor Swasthya Karyakram) programme",
+        "Follow up in 4 weeks for response assessment",
+        "Counsel on avoiding tea/coffee with meals (inhibits iron absorption)",
+    ],
+    near_miss_referrals={"REFER_WITHIN_24H": 0.4, "MONITOR": 0.5},
+    key_danger_signs=[
+        "Breathlessness at rest = severe anaemia = REFER_IMMEDIATELY",
+        "Palpitations or chest pain = cardiac compromise = REFER_IMMEDIATELY",
+        "Haemoglobin < 7 g/dL (pallor of palms) = REFER_WITHIN_24H",
+        "Heavy menstrual bleeding = cause needs investigation",
+    ],
+    explanation=(
+        "Mild iron deficiency anaemia in adolescent girl — mild pallor, fatigue, poor diet, no cardiorespiratory "
+        "compromise. WIFS (Weekly Iron Folic Acid Supplementation) is the standard ASHA intervention under RKSK. "
+        "No breathlessness at rest, no pallor of palms = mild anaemia only. Refer only if severe: breathlessness "
+        "at rest, pallor of palms, Hb < 7 g/dL. Teaching point: severity markers (breathlessness, palm pallor) "
+        "determine whether anaemia needs referral or home management."
+    ),
+    terminal_message="Mild anaemia, no breathlessness, no palm pallor = TREAT_AT_HOME with WIFS and dietary counselling.",
+    available_tools=["muac_calculator"],
+    phc_manageable=True,
+    correct_doctor_decision="manage_at_phc",
+)
+
+# ── MONITOR — Medium (M13–M14) ───────────────────────────────────────────────
+
+CASE_M13 = ClinicalCase(
+    case_id="M13",
+    title="Post-Illness Recovery — Child After Treated Pneumonia",
+    difficulty="medium",
+    category="pediatric",
+    age_description="2 years old",
+    gender="male",
+    location="rural_bihar",
+    malaria_risk_area=False,
+    season="winter",
+    initial_presentation=(
+        "Didi, Raju ko 5 din pehle PHC ne pneumonia ke liye antibiotic diya tha. "
+        "Ab bukhar nahi hai, kha pi raha hai. Maa pooch rahi hai kya karna hai."
+        "\n[Sister, Raju was given antibiotics for pneumonia by PHC 5 days ago. "
+        "Now no fever, eating and drinking. Mother asking what to do.]"
+    ),
+    followup_responses={
+        "fever": "No fever since 3 days.",
+        "breathing": "Normal breathing now. No fast breathing.",
+        "chest": "No chest indrawing.",
+        "eat": "Eating well, appetite has returned.",
+        "drink": "Drinking normally, no vomiting.",
+        "antibiotic": "Completed full 5-day course of amoxicillin.",
+        "medicine": "Finished all medicines as prescribed.",
+        "cough": "Mild residual cough, improving day by day.",
+        "active": "Active, playing with siblings.",
+        "danger": "No danger signs — alert, feeding, no fever.",
+        "weight": "Same weight as before illness — no weight loss.",
+    },
+    correct_referral="MONITOR",
+    correct_urgency="monitor",
+    correct_primary_concern="post_pneumonia_recovery",
+    correct_action_items=[
+        "Monitor temperature daily for 3 more days",
+        "Complete any remaining antibiotic course",
+        "Ensure adequate nutrition to support recovery",
+        "Return immediately if: fever returns, breathing worsens, stops eating",
+        "Schedule weight check in 2 weeks",
+        "Counsel on hand-washing and smoke-free home",
+    ],
+    near_miss_referrals={"TREAT_AT_HOME": 0.6, "REFER_WITHIN_24H": 0.2},
+    key_danger_signs=[
+        "Fever returns after 48 hours = treatment failure = REFER_WITHIN_24H",
+        "Fast breathing returns = relapse = REFER_WITHIN_24H",
+        "Chest indrawing = worsening = REFER_IMMEDIATELY",
+    ],
+    explanation=(
+        "Post-pneumonia recovery follow-up. Antibiotic course completed, fever resolved, feeding well, "
+        "breathing normal. MONITOR (not TREAT_AT_HOME) because the illness is recent — active surveillance "
+        "for treatment failure or relapse is needed. IMNCI follow-up visit protocol: if improving, "
+        "continue monitoring at home. Only refer if worsening. Teaching point: MONITOR is an active "
+        "surveillance decision — different from TREAT_AT_HOME which is a stable baseline."
+    ),
+    terminal_message="Post-pneumonia recovery, antibiotics completed, no danger signs = MONITOR with return criteria.",
+    phc_manageable=True,
+    correct_doctor_decision="manage_at_phc",
+)
+
+CASE_M14 = ClinicalCase(
+    case_id="M14",
+    title="Mild Underweight — Growth Monitoring Follow-Up",
+    difficulty="medium",
+    category="pediatric",
+    age_description="14 months old",
+    gender="female",
+    location="rural_mp",
+    malaria_risk_area=False,
+    season="monsoon",
+    initial_presentation=(
+        "Didi, Soni 14 mahine ki hai. Pichle mahine weighing mein weight thoda kam nikla tha. "
+        "Ab theek lag rahi hai, khel rahi hai."
+        "\n[Sister, Soni is 14 months old. Last month's weighing showed she was slightly underweight. "
+        "Now she looks fine, is playing.]"
+    ),
+    followup_responses={
+        "weight": "Weight last month was 7.8 kg. Age-appropriate is about 9 kg.",
+        "muac": "MUAC is 127 mm.",
+        "eat": "Eating semi-solid food, some days better than others.",
+        "feed": "Still breastfeeding twice a day. Eating khichdi and mashed food.",
+        "active": "Active, walking, playing normally.",
+        "fever": "No fever currently.",
+        "diarrhea": "Had diarrhea 2 weeks ago, now resolved.",
+        "breathing": "Normal breathing.",
+        "edema": "No swelling of feet.",
+        "growth": "Weight has been on the lower side since 8 months.",
+    },
+    correct_referral="MONITOR",
+    correct_urgency="monitor",
+    correct_primary_concern="mild_underweight_growth_faltering",
+    correct_action_items=[
+        "Monthly weight monitoring on growth chart",
+        "Dietary counselling — frequency, density, diversity of complementary foods",
+        "Continue breastfeeding alongside solid foods",
+        "MUAC monthly — refer if drops below 115 mm (SAM)",
+        "Check for illness episodes that may cause weight loss",
+        "Register under POSHAN Abhiyaan for supplementary nutrition",
+    ],
+    near_miss_referrals={"TREAT_AT_HOME": 0.5, "REFER_WITHIN_24H": 0.3},
+    key_danger_signs=[
+        "MUAC < 115 mm = SAM = REFER_IMMEDIATELY to NRC",
+        "MUAC 115-125 mm = MAM = REFER_WITHIN_24H for CMAM",
+        "Bilateral oedema = SAM (kwashiorkor) = REFER_IMMEDIATELY",
+        "Weight loss over 2 consecutive months = REFER_WITHIN_24H",
+    ],
+    explanation=(
+        "Mild underweight (weight-for-age below -2 SD but MUAC 127 mm > 125 mm threshold). "
+        "Child is active, no oedema, MUAC above SAM/MAM threshold. MONITOR means active nutritional "
+        "surveillance — monthly MUAC, weight, and dietary counselling. Not TREAT_AT_HOME because "
+        "growth faltering requires ongoing tracking. Not REFER because MUAC is above referral thresholds. "
+        "Teaching point: MUAC thresholds (115/125 mm) are the ASHA's primary SAM detection tool."
+    ),
+    terminal_message="Mild underweight, MUAC 127 mm (normal), active child = MONITOR with monthly growth tracking.",
+    available_tools=["muac_calculator"],
+    phc_manageable=True,
+    correct_doctor_decision="manage_at_phc",
+)
+
+# ── MONITOR — Hard (H14–H15) ─────────────────────────────────────────────────
+
+CASE_H14 = ClinicalCase(
+    case_id="H14",
+    title="Stable Gestational Hypertension — BP 140/90, No Severe Features",
+    difficulty="hard",
+    category="maternal",
+    age_description="32 years old, 7 months pregnant",
+    gender="female",
+    location="tribal_jharkhand",
+    malaria_risk_area=True,
+    season="monsoon",
+    initial_presentation=(
+        "Didi, Kamla 7 mahine pregnant hai. Aaj PHC se aayi — BP 140/90 nikla. "
+        "Koi aur takleef nahi. Doctor ne ghar bhej diya, ASHA ko batao kaha."
+        "\n[Sister, Kamla is 7 months pregnant. Came back from PHC today — BP was 140/90. "
+        "No other complaints. Doctor sent her home, told to inform ASHA.]"
+    ),
+    followup_responses={
+        "bp": "140/90 at PHC today. ASHA has BP machine — confirms same reading.",
+        "blood pressure": "140/90 on two readings.",
+        "headache": "Mild headache but bearable. Not severe.",
+        "vision": "No blurred vision. Sees clearly.",
+        "swelling": "Mild swelling of feet only. Not hands or face.",
+        "urine": "Urine output normal.",
+        "protein": "PHC tested urine — no protein.",
+        "conscious": "Alert, talking normally.",
+        "baby": "Baby moving normally.",
+        "previous": "First pregnancy, no previous hypertension.",
+        "symptoms": "No severe headache, no vision changes, no epigastric pain.",
+    },
+    correct_referral="MONITOR",
+    correct_urgency="monitor",
+    correct_primary_concern="gestational_hypertension_stable",
+    correct_action_items=[
+        "Monitor BP twice daily — morning and evening",
+        "Record in ANC card",
+        "Immediately refer if: BP > 160/110, severe headache, blurred vision, epigastric pain, reduced fetal movement",
+        "Ensure next ANC in 1 week at PHC",
+        "Restrict dietary salt",
+        "Do not give antihypertensives without doctor prescription",
+        "Alert family of danger signs requiring immediate 108 call",
+    ],
+    near_miss_referrals={"REFER_WITHIN_24H": 0.5, "REFER_IMMEDIATELY": 0.3},
+    key_danger_signs=[
+        "BP ≥ 160/110 = severe hypertension = REFER_IMMEDIATELY",
+        "Severe headache = warning sign for eclampsia = REFER_IMMEDIATELY",
+        "Blurred vision = pre-eclampsia severe feature = REFER_IMMEDIATELY",
+        "Epigastric pain = HELLP syndrome = REFER_IMMEDIATELY",
+        "No proteinuria + BP 140/90 = gestational hypertension (not pre-eclampsia)",
+    ],
+    explanation=(
+        "Gestational hypertension (BP 140/90) WITHOUT proteinuria or severe features = MONITOR at home "
+        "with close surveillance. Pre-eclampsia requires proteinuria OR severe features (severe headache, "
+        "visual changes, epigastric pain, BP ≥ 160/110). This case has none of those — PHC correctly sent "
+        "her home. ASHA role is twice-daily BP monitoring and immediate escalation if threshold crossed. "
+        "Teaching point: BP 140/90 alone ≠ REFER_IMMEDIATELY; severe features determine urgency."
+    ),
+    terminal_message="Gestational hypertension 140/90, no severe features = MONITOR with BP twice daily, refer if worsens.",
+    phc_manageable=False,
+    correct_doctor_decision="refer_to_fru",
+)
+
+CASE_H15 = ClinicalCase(
+    case_id="H15",
+    title="Moderate Acute Malnutrition — CMAM Enrolment Follow-Up",
+    difficulty="hard",
+    category="pediatric",
+    age_description="3 years old",
+    gender="male",
+    location="rural_odisha",
+    malaria_risk_area=True,
+    season="summer",
+    initial_presentation=(
+        "Didi, Bunty ko pichle hafte NRC se discharge kiya tha. Ab ghar par CMAM mein hai. "
+        "Thoda better lag raha hai. Maa pooch rahi hai kya follow-up karna hai."
+        "\n[Sister, Bunty was discharged from NRC last week. Now at home on CMAM programme. "
+        "Looking slightly better. Mother asking about follow-up.]"
+    ),
+    followup_responses={
+        "weight": "Weight at discharge was 10.2 kg. Today 10.4 kg — gained 200g.",
+        "muac": "MUAC today is 118 mm. Was 114 mm at admission.",
+        "eat": "Eating RUTF (Plumpy'nut) well — 3 sachets per day.",
+        "appetite": "Good appetite — finished all RUTF.",
+        "fever": "No fever since discharge.",
+        "diarrhea": "No diarrhea.",
+        "breathing": "Normal breathing.",
+        "edema": "No oedema — both feet normal.",
+        "active": "More active than before, playing a little.",
+        "medication": "Completed amoxicillin course from NRC. Taking vitamins.",
+    },
+    correct_referral="MONITOR",
+    correct_urgency="monitor",
+    correct_primary_concern="moderate_acute_malnutrition_cmam_recovery",
+    correct_action_items=[
+        "Continue RUTF — 3 sachets per day until MUAC > 125 mm for 2 consecutive weeks",
+        "Weekly ASHA visit for weight and MUAC measurement",
+        "Immediately refer if: MUAC drops below 115 mm, oedema appears, fever, or appetite loss",
+        "Ensure full vaccine catch-up schedule",
+        "Dietary counselling for complementary foods alongside RUTF",
+        "Record in CMAM register",
+    ],
+    near_miss_referrals={"TREAT_AT_HOME": 0.4, "REFER_WITHIN_24H": 0.3},
+    key_danger_signs=[
+        "MUAC drops below 115 mm = relapse to SAM = REFER_IMMEDIATELY",
+        "Bilateral oedema reappears = REFER_IMMEDIATELY",
+        "Loss of appetite / refuses RUTF = possible medical complication = REFER_WITHIN_24H",
+        "Fever + poor appetite = infection = REFER_WITHIN_24H",
+    ],
+    explanation=(
+        "Post-NRC CMAM follow-up for a child recovering from SAM. MUAC 118 mm (MAM range 115-125 mm), "
+        "weight gaining, no oedema, eating RUTF well = improving but not yet discharged from CMAM. "
+        "MONITOR is correct — child needs active weekly surveillance until MUAC > 125 mm on two "
+        "consecutive visits. TREAT_AT_HOME would under-monitor this fragile case; referral is not "
+        "needed while response is good. Teaching point: CMAM discharge criterion = MUAC > 125 mm "
+        "for 2 consecutive weeks, not just clinical impression."
+    ),
+    terminal_message="SAM recovery — MUAC 118 mm, gaining weight, no danger signs = MONITOR weekly on CMAM programme.",
+    available_tools=["muac_calculator"],
+    phc_manageable=False,
+    correct_doctor_decision="refer_to_fru",
+)
+
+# ── REFER_WITHIN_24H — Medium/Hard (M15, H16–H18) ───────────────────────────
+
+CASE_M15 = ClinicalCase(
+    case_id="M15",
+    title="Suspected Urinary Tract Infection in Pregnancy",
+    difficulty="medium",
+    category="maternal",
+    age_description="28 years old, 4 months pregnant",
+    gender="female",
+    location="rural_up",
+    malaria_risk_area=False,
+    season="summer",
+    initial_presentation=(
+        "Didi, Rekha 4 mahine pregnant hai. 3 din se peshaab karte waqt jalan ho rahi hai, "
+        "baar baar peshaab aata hai."
+        "\n[Sister, Rekha is 4 months pregnant. For 3 days, burning sensation while urinating, "
+        "and she urinates frequently.]"
+    ),
+    followup_responses={
+        "fever": "Low-grade fever 37.6°C. Mild.",
+        "temperature": "37.6°C. Not high.",
+        "back": "Mild lower back pain — not severe.",
+        "backache": "Mild lower backache.",
+        "vomit": "No vomiting.",
+        "active": "Active, doing household work.",
+        "conscious": "Fully alert.",
+        "bleeding": "No vaginal bleeding.",
+        "baby": "Baby movements normal.",
+        "urine": "Burning on urination. Passing more frequently than normal. Urine looks slightly cloudy.",
+        "cloudy": "Slightly cloudy urine.",
+        "smell": "Urine has stronger smell than usual.",
+        "loin": "No severe loin pain or rigors.",
+    },
+    correct_referral="REFER_WITHIN_24H",
+    correct_urgency="within_24h",
+    correct_primary_concern="urinary_tract_infection_pregnancy",
+    correct_action_items=[
+        "Refer to PHC for urine culture and sensitivity within 24 hours",
+        "Advise increased fluid intake — 8-10 glasses of water daily",
+        "Do not give antibiotics without urine culture result",
+        "Monitor for worsening: high fever, rigor, loin pain = pyelonephritis = REFER_IMMEDIATELY",
+        "Document on ANC card",
+    ],
+    near_miss_referrals={"TREAT_AT_HOME": 0.2, "REFER_IMMEDIATELY": 0.4},
+    key_danger_signs=[
+        "High fever (>38.5°C) + loin pain + rigors = pyelonephritis = REFER_IMMEDIATELY",
+        "Untreated UTI in pregnancy = preterm labour risk",
+        "UTI in pregnancy always needs antibiotic after culture",
+    ],
+    explanation=(
+        "UTI in pregnancy (dysuria + frequency + cloudy urine + low-grade fever) = REFER_WITHIN_24H "
+        "for urine culture. Untreated UTI in pregnancy increases risk of pyelonephritis and preterm "
+        "labour. ASHA should not give antibiotics without lab confirmation. Mild UTI without high fever "
+        "or loin pain = NOT an emergency, but needs timely PHC assessment. Teaching point: pregnancy "
+        "elevates the urgency of UTI compared to non-pregnant women."
+    ),
+    terminal_message="UTI in pregnancy — dysuria, low-grade fever, cloudy urine = REFER_WITHIN_24H for urine culture.",
+    phc_manageable=True,
+    correct_doctor_decision="manage_at_phc",
+)
+
+CASE_H16 = ClinicalCase(
+    case_id="H16",
+    title="Type 2 Diabetes — Uncontrolled, NCD Programme Enrolment",
+    difficulty="hard",
+    category="ncd",
+    age_description="58 years old",
+    gender="female",
+    location="rural_rajasthan",
+    malaria_risk_area=False,
+    season="summer",
+    initial_presentation=(
+        "Didi, Savitri bai ki maa 58 saal ki hain. Zyada pyaas lagti hai, baar baar peshaab aata hai, "
+        "aankhon ki roshni kam ho rahi hai kuch mahino se. Unhe pata nahi kya hua hai."
+        "\n[Sister, Savitri bai's mother is 58 years old. Excessive thirst, frequent urination, "
+        "vision getting blurry over months. She doesn't know what is wrong.]"
+    ),
+    followup_responses={
+        "thirst": "Extreme thirst all the time — drinks a lot of water.",
+        "urine": "Urinating very frequently, even at night, 4-5 times.",
+        "vision": "Blurred vision for past 3 months — worsening gradually.",
+        "weight": "Has lost weight over past few months without trying.",
+        "wound": "Small cut on foot 2 weeks ago — not healing well, still open.",
+        "heal": "Foot cut not healing — looks slightly red.",
+        "diet": "Eats a lot of rice and sweets. Sedentary lifestyle.",
+        "family": "Brother has diabetes, is on insulin.",
+        "conscious": "Alert, oriented.",
+        "fever": "No fever.",
+        "cbac": "CBAC score: age 58 + family diabetes + obesity + sedentary = score > 5.",
+    },
+    correct_referral="REFER_WITHIN_24H",
+    correct_urgency="within_24h",
+    correct_primary_concern="undiagnosed_diabetes_mellitus",
+    correct_action_items=[
+        "Refer to PHC for fasting blood glucose and HbA1c within 24 hours",
+        "Document CBAC risk score on referral slip",
+        "Assess foot wound — if spreading redness or pus, REFER_IMMEDIATELY",
+        "Register under NPCDCS at PHC",
+        "Advise reduce sugary foods and increase physical activity",
+        "Do NOT give any diabetes medication without diagnosis",
+    ],
+    near_miss_referrals={"REFER_IMMEDIATELY": 0.4},
+    key_danger_signs=[
+        "Spreading foot wound infection = diabetic foot = REFER_IMMEDIATELY",
+        "Altered consciousness = hypoglycaemia or hyperglycaemic crisis = REFER_IMMEDIATELY",
+        "Classic triad: polydipsia + polyuria + weight loss = probable DM = REFER_WITHIN_24H",
+        "Non-healing wound in undiagnosed patient = high suspicion DM",
+    ],
+    explanation=(
+        "Classic undiagnosed Type 2 DM presentation: polyuria + polydipsia + unexplained weight loss + "
+        "non-healing wound + family history. CBAC score ≥ 5 mandates referral per NHM NPCDCS guidelines. "
+        "Non-healing foot wound adds urgency — not an emergency YET but must be assessed at PHC within 24h. "
+        "ASHA must document CBAC risk factors and ensure PHC enrolment. Teaching point: non-healing wound "
+        "in a symptomatic patient = possible diabetic foot, the urgency of the referral increases."
+    ),
+    terminal_message="Classic DM triad + non-healing wound + CBAC score ≥ 5 = REFER_WITHIN_24H for glucose testing.",
+    available_tools=["cbac_scorer"],
+    phc_manageable=True,
+    correct_doctor_decision="manage_at_phc",
+)
+
+CASE_H17 = ClinicalCase(
+    case_id="H17",
+    title="Adolescent Severe Anaemia — Breathlessness on Exertion, RKSK",
+    difficulty="hard",
+    category="adolescent",
+    age_description="16 years old",
+    gender="female",
+    location="rural_bihar",
+    malaria_risk_area=False,
+    season="winter",
+    initial_presentation=(
+        "Didi, Meena 16 saal ki hai. Ek mahine se thakaan aur chakkar aa rahe hain. "
+        "Seedhiyan chadhne par saansh phool jaati hai. Haath-pair bahut pale dikhte hain."
+        "\n[Sister, Meena is 16 years old. For one month, fatigue and dizziness. "
+        "She gets breathless climbing stairs. Hands and feet look very pale.]"
+    ),
+    followup_responses={
+        "breathless": "Yes — breathless on climbing even one flight of stairs.",
+        "breathing": "Breathless on exertion. At rest, okay.",
+        "pallor": "Very pale — pale palms, pale lower eyelids, pale tongue.",
+        "pale": "Marked pallor of palms and conjunctiva.",
+        "rest": "At rest, breathing normal. On exertion, gets breathless.",
+        "heart": "No chest pain. No palpitations at rest.",
+        "menstrual": "Heavy periods — soaking 4-5 pads per day for 5-6 days.",
+        "period": "Heavy menstrual bleeding, prolonged periods.",
+        "diet": "Eats only roti and dal — no green vegetables, no eggs.",
+        "muac": "MUAC 19 cm — thin.",
+        "fever": "No fever.",
+        "conscious": "Alert but looks weak and tired.",
+    },
+    correct_referral="REFER_WITHIN_24H",
+    correct_urgency="within_24h",
+    correct_primary_concern="severe_anaemia_adolescent",
+    correct_action_items=[
+        "Refer to PHC for haemoglobin estimation within 24 hours",
+        "Start daily IFA tablet (WIFS programme) — do not wait for Hb result",
+        "Refer for menstrual irregularity assessment",
+        "Dietary counselling on iron-rich foods",
+        "Deworm with albendazole 400 mg",
+        "Return IMMEDIATELY if: breathlessness at rest, palpitations at rest, chest pain",
+    ],
+    near_miss_referrals={"REFER_IMMEDIATELY": 0.5, "TREAT_AT_HOME": 0.1},
+    key_danger_signs=[
+        "Breathlessness at REST = severe anaemia with cardiac compromise = REFER_IMMEDIATELY",
+        "Pale palms = probable Hb < 7 g/dL = REFER_WITHIN_24H minimum",
+        "Palpitations + chest pain = cardiac decompensation = REFER_IMMEDIATELY",
+        "This case: breathless only on exertion (not rest) = REFER_WITHIN_24H",
+    ],
+    explanation=(
+        "Severe anaemia in adolescent girl — marked pallor of palms and conjunctiva (probable Hb < 7 g/dL), "
+        "breathlessness on exertion (NOT at rest), heavy menstrual bleeding as likely cause. "
+        "Breathlessness on exertion with pale palms = REFER_WITHIN_24H for Hb. Breathlessness at REST "
+        "would be REFER_IMMEDIATELY. This distinction is the key teaching point — exertional vs. resting "
+        "breathlessness determines urgency. RKSK programme covers this age group."
+    ),
+    terminal_message="Severe anaemia — pale palms, breathless on exertion only = REFER_WITHIN_24H for haemoglobin.",
+    phc_manageable=True,
+    correct_doctor_decision="manage_at_phc",
+)
+
+CASE_H18 = ClinicalCase(
+    case_id="H18",
+    title="Possible TB — Adult with Chronic Cough and Weight Loss",
+    difficulty="hard",
+    category="tb",
+    age_description="38 years old",
+    gender="male",
+    location="tribal_jharkhand",
+    malaria_risk_area=True,
+    season="winter",
+    initial_presentation=(
+        "Didi, Ratan ko 3 hafte se khansi hai, raat ko pasina aata hai, wajan kam ho raha hai. "
+        "Pehle zyada peeta tha, ab chod diya. Kuch khata bhi nahi theek se."
+        "\n[Sister, Ratan has had cough for 3 weeks, night sweats, losing weight. "
+        "Used to drink alcohol, now stopped. Not eating well either.]"
+    ),
+    followup_responses={
+        "cough": "Yes — cough for 3 weeks. Bringing up some yellowish sputum.",
+        "sputum": "Yellowish sputum. Some days blood-tinged — saw it twice.",
+        "blood": "Yes — twice in past week, small amount of blood in sputum.",
+        "haemoptysis": "Yes, blood-stained sputum twice.",
+        "fever": "Low-grade evening fever. Not high, but daily.",
+        "night": "Night sweats — wakes up drenched.",
+        "weight": "Lost about 4 kg in 2 months without trying.",
+        "contact": "His cousin was treated for TB 2 years ago.",
+        "exposure": "Household contact of a previous TB case.",
+        "breathing": "No breathlessness at rest. Mild breathlessness on exertion.",
+        "conscious": "Alert, oriented.",
+        "alcohol": "Quit alcohol 1 month ago — was drinking heavily before.",
+    },
+    correct_referral="REFER_WITHIN_24H",
+    correct_urgency="within_24h",
+    correct_primary_concern="pulmonary_tb_presumptive",
+    correct_action_items=[
+        "Refer to PHC for sputum CBNAAT/smear microscopy within 24 hours — NTEP protocol",
+        "Provide N-95 mask if available, ask patient to cover mouth when coughing",
+        "Document TB contact history on NTEP referral form",
+        "Do NOT start any TB medication before testing",
+        "Register in NTEP presumptive TB register",
+        "Counsel on DOT (Directly Observed Treatment) if confirmed",
+    ],
+    near_miss_referrals={"REFER_IMMEDIATELY": 0.3},
+    key_danger_signs=[
+        "Haemoptysis (blood in sputum) increases urgency — refer same day",
+        "Breathlessness at rest = large pleural effusion or pneumothorax = REFER_IMMEDIATELY",
+        "Severe haemoptysis (> 1 cup) = REFER_IMMEDIATELY",
+        "Classic triad: cough > 2 weeks + night sweats + weight loss = presumptive TB",
+    ],
+    explanation=(
+        "Presumptive pulmonary TB: cough > 2 weeks + night sweats + weight loss + haemoptysis + "
+        "household TB contact. NTEP protocol: all presumptive TB cases → sputum CBNAAT within 24 hours. "
+        "Haemoptysis (blood-tinged sputum twice) increases urgency within the REFER_WITHIN_24H category — "
+        "same-day referral preferred. Alcohol history is a classic TB risk factor. Teaching point: "
+        "NTEP defines presumptive TB as any cough ≥ 2 weeks — ASHA must refer ALL such cases for testing."
+    ),
+    terminal_message="Presumptive TB — 3-week cough, haemoptysis, weight loss, TB contact = REFER_WITHIN_24H for sputum test.",
+    phc_manageable=True,
+    correct_doctor_decision="manage_at_phc",
+)
+
+
+# ---------------------------------------------------------------------------
 # Case registry
 # ---------------------------------------------------------------------------
 
@@ -1688,15 +2463,21 @@ ALL_CASES: dict[str, ClinicalCase] = {
     for case in [
         CASE_E01, CASE_E02, CASE_E03, CASE_E04, CASE_E05,
         CASE_E06, CASE_E07, CASE_E08,
+        CASE_E09, CASE_E10, CASE_E11,
         CASE_M01, CASE_M02, CASE_M03, CASE_M04, CASE_M05,
         CASE_M06, CASE_M07, CASE_M08, CASE_M09, CASE_M10,
+        CASE_M11, CASE_M12, CASE_M13, CASE_M14, CASE_M15,
         CASE_H01, CASE_H02, CASE_H03, CASE_H04, CASE_H05, CASE_H06,
         CASE_H07, CASE_H08, CASE_H09, CASE_H10, CASE_H11, CASE_H12, CASE_H13,
+        CASE_H14, CASE_H15, CASE_H16, CASE_H17, CASE_H18,
     ]
 }
 
 CASES_BY_DIFFICULTY: dict[str, list[str]] = {
-    "easy":   ["E01", "E02", "E03", "E04", "E05", "E06", "E07", "E08"],
-    "medium": ["M01", "M02", "M03", "M04", "M05", "M06", "M07", "M08", "M09", "M10"],
-    "hard":   ["H01", "H02", "H03", "H04", "H05", "H06", "H07", "H08", "H09", "H10", "H11", "H12", "H13"],
+    "easy":   ["E01", "E02", "E03", "E04", "E05", "E06", "E07", "E08", "E09", "E10", "E11"],
+    "medium": ["M01", "M02", "M03", "M04", "M05", "M06", "M07", "M08", "M09", "M10",
+               "M11", "M12", "M13", "M14", "M15"],
+    "hard":   ["H01", "H02", "H03", "H04", "H05", "H06",
+               "H07", "H08", "H09", "H10", "H11", "H12", "H13",
+               "H14", "H15", "H16", "H17", "H18"],
 }

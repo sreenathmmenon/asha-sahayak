@@ -318,7 +318,7 @@ immediate referral. Ground truth: official Indian Government IMNCI protocol.
 
 | Feature | Detail |
 |---|---|
-| Cases | 31 clinical cases across 7 domains |
+| Cases | 44 clinical cases across 7 domains |
 | Domains | Pediatric, Maternal, Neonatal, TB, NCD, Adolescent, Malaria |
 | Reward | Referral (40%) + Urgency (25%) + Concern (20%) + Info (15%) |
 | Concurrent sessions | 64 (GRPO-ready) |

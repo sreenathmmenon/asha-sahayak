@@ -163,7 +163,7 @@ def metadata() -> Dict[str, Any]:
         "supports_concurrent_sessions": True,
         "max_concurrent_sessions": 64,
         "tasks": ["easy", "medium", "hard"],
-        "num_cases": 31,
+        "num_cases": len(__import__('asha_sahayak.server.corpus.cases', fromlist=['ALL_CASES']).ALL_CASES),
     }
 
 
