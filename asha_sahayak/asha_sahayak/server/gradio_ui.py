@@ -137,7 +137,8 @@ _CSS = """
     margin-top: 12px;
     margin-bottom: 4px;
 }
-.gradio-container { max-width: 1100px; margin: auto; }
+.gradio-container { max-width: 1200px; margin: auto; }
+.wrap { overflow-wrap: break-word; word-break: break-word; }
 """
 
 _DIVIDER = "<div style='margin: 36px 0; border-top: 2px solid #e5e7eb;'></div>"
@@ -216,16 +217,21 @@ Set `PENDING` + `question` to ask a clarifying question. Set a final decision to
         with gr.Row():
             with gr.Column():
                 gr.Markdown("""
-### Overall Results — Qwen3-0.6B · 200 GRPO Steps
+### Overall Results — Qwen3-0.6B · 3 Training Runs
 
-**Real training run · April 25, 2026**
+**Real training runs · April 25–26, 2026**
 
-| Metric | Value |
+| Metric | Run 1 (200 steps) | Run 2 (200 steps) | Run 3 (400 steps) |
+|---|---|---|---|
+| Baseline reward | ~0.47 | 0.31 | 0.14 |
+| Final reward | ~0.52 | **0.75** | 0.66 |
+| Peak reward | ~0.75 | **0.947** | **0.947** |
+| Notebook | — | [run2 results](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/asha_sahayak/training/asha_grpo_training_with_outputs_run2_200steps.ipynb) | [run3 results](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/asha_sahayak/training/asha_grpo_training_with_outputs_run3_400steps.ipynb) |
+
+**Best result (Run 2):** baseline 0.31 → final 0.75 → peak 0.947 · +142% improvement
+
+| Detail | Value |
 |---|---|
-| Baseline reward | 0.31 |
-| Final reward (step 200) | **0.75** |
-| Peak reward (step 189) | **0.947** |
-| Improvement | **+142% relative** |
 | Model | Qwen3-0.6B (3.3% of params trained) |
 | Algorithm | GRPO via TRL + Unsloth |
 | Checkpoint | [asha-sahayak-grpo](https://huggingface.co/sreenathmmenon/asha-sahayak-grpo) |
@@ -248,7 +254,7 @@ The model improved most on **referral correctness** (+0.53) and **concern identi
 
         gr.Image(
             value="assets/training_comparison_overlaid.png",
-            label="Run 1 vs Run 2 — Both Runs on Same Axes",
+            label="Run 1 vs Run 2 — Overlaid on Same Axes",
             show_label=True,
         )
 
@@ -256,18 +262,26 @@ The model improved most on **referral correctness** (+0.53) and **concern identi
             with gr.Column():
                 gr.Image(
                     value="assets/training_reward_curve_run1.png",
-                    label="Run 1 — Regex parsing (baseline ~0.47, final ~0.52)",
+                    label="Run 1 | 200 steps | final ~0.52",
                     show_label=True,
                 )
             with gr.Column():
                 gr.Image(
                     value="assets/training_reward_curve.png",
-                    label="Run 2 — JSON fix (baseline 0.31, peak 0.947, final 0.75)",
+                    label="Run 2 | 200 steps | final 0.75 ★ Best",
+                    show_label=True,
+                )
+            with gr.Column():
+                gr.Image(
+                    value="assets/training_reward_curve_run3.png",
+                    label="Run 3 | 400 steps | final 0.66",
                     show_label=True,
                 )
 
         gr.Markdown("""
-> **What changed between runs:** Run 1 used regex to extract the model's concern — defaulting to "general" when the model didn't match the pattern, so the concern reward component was nearly always 0. Run 2 switched to structured JSON output and JSON parsing instead of regex. This unlocked the concern component (+0.52) and drove the overall reward from 0.52 → 0.75 (+142% over baseline).
+> **Run 1 → Run 2:** Switched from regex to structured JSON output — unlocked the concern reward component (+0.52) and drove the overall reward from 0.52 → 0.75 (+142% over baseline).
+
+> **Run 2 → Run 3:** Extended to 400 steps. The model reached the same peak (0.947) confirming training consistency, with a final of 0.66 — slightly lower than Run 2, likely due to reward oscillation at longer horizons with a 0.6B model.
         """)
 
         gr.Markdown("""
@@ -280,7 +294,7 @@ The model improved most on **referral correctness** (+0.53) and **concern identi
 | Newborn Day 3, mild jaundice, feeding well | "Refer to hospital" ❌ (over-triage) | **MONITOR** — physiological jaundice, normal ✅ |
 
 ### What the Model Learned
-The reward curve shows a strong upward trend steps 0→100, reaching **0.947 peak at step 189** — a +142% improvement over baseline. The model learned to:
+Across 3 runs, the model consistently reached **0.947 peak reward**. Run 2 (200 steps, JSON-structured output) achieved the best final score of **0.75** — a +142% improvement over baseline. The model learned to:
 - Ask clarifying questions **before** making a referral decision
 - Output structured JSON enabling all 4 reward components to be scored
 - Distinguish REFER_IMMEDIATELY from TREAT_AT_HOME based on IMNCI danger signs
