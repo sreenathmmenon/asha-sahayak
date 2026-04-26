@@ -15,9 +15,9 @@ short_description: AI clinical decision support for India's 1.07M ASHA workers
 > Meta PyTorch OpenEnv Hackathon x Scaler SST India 2026 — Grand Finale
 
 **🔗 HuggingFace Space**: https://huggingface.co/spaces/sreenathmmenon/asha-sahayak  
-**📓 Training Notebook (clean, re-runnable)**: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/training/asha_grpo_training.ipynb)  
-**📓 Run 2 — 200 steps with outputs**: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/training/asha_grpo_training_with_outputs_run2_200steps.ipynb)  
-**📓 Run 3 — 400 steps with outputs**: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/training/asha_grpo_training_with_outputs_run3_400steps.ipynb)  
+**📓 Training Notebook (clean, re-runnable)**: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/asha_sahayak/training/asha_grpo_training.ipynb)  
+**📓 Run 2 — 200 steps with outputs**: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/asha_sahayak/training/asha_grpo_training_with_outputs_run2_200steps.ipynb)  
+**📓 Run 3 — 400 steps with outputs**: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/asha_sahayak/training/asha_grpo_training_with_outputs_run3_400steps.ipynb)  
 **📝 Blog Post**: [BLOG.md](BLOG.md)
 
 ---
@@ -249,7 +249,7 @@ config = GRPOConfig(
 | Baseline reward | ~0.47 | 0.31 | 0.14 |
 | Final reward | ~0.52 | **0.75** | 0.66 |
 | Peak reward | ~0.75 | **0.947** | **0.947** |
-| Colab notebook | — | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/training/asha_grpo_training_with_outputs_run2_200steps.ipynb) | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/training/asha_grpo_training_with_outputs_run3_400steps.ipynb) |
+| Colab notebook | — | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/asha_sahayak/training/asha_grpo_training_with_outputs_run2_200steps.ipynb) | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/asha_sahayak/training/asha_grpo_training_with_outputs_run3_400steps.ipynb) |
 
 **Best result (Run 2):** baseline 0.31 → final **0.75** → peak **0.947** · +142% improvement  
 **Run 3 confirms:** same 0.947 peak reached at 400 steps — consistent training signal across runs.
@@ -324,9 +324,9 @@ Full results: [`assets/heldout_evaluation.json`](assets/heldout_evaluation.json)
 
 | Notebook | Description | Colab |
 |---|---|---|
-| [`asha_grpo_training.ipynb`](training/asha_grpo_training.ipynb) | Clean, re-runnable | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/training/asha_grpo_training.ipynb) |
-| [`...run2_200steps.ipynb`](training/asha_grpo_training_with_outputs_run2_200steps.ipynb) | Run 2 with full outputs — final 0.75, peak 0.947 | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/training/asha_grpo_training_with_outputs_run2_200steps.ipynb) |
-| [`...run3_400steps.ipynb`](training/asha_grpo_training_with_outputs_run3_400steps.ipynb) | Run 3 with full outputs — 400 steps, peak 0.947 | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/training/asha_grpo_training_with_outputs_run3_400steps.ipynb) |
+| [`asha_grpo_training.ipynb`](training/asha_grpo_training.ipynb) | Clean, re-runnable | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/asha_sahayak/training/asha_grpo_training.ipynb) |
+| [`...run2_200steps.ipynb`](training/asha_grpo_training_with_outputs_run2_200steps.ipynb) | Run 2 with full outputs — final 0.75, peak 0.947 | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/asha_sahayak/training/asha_grpo_training_with_outputs_run2_200steps.ipynb) |
+| [`...run3_400steps.ipynb`](training/asha_grpo_training_with_outputs_run3_400steps.ipynb) | Run 3 with full outputs — 400 steps, peak 0.947 | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/asha_sahayak/training/asha_grpo_training_with_outputs_run3_400steps.ipynb) |
 
 ### Blog Post
 
