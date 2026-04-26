@@ -170,7 +170,7 @@ ASHA Sahayak is a reinforcement learning environment trained on the Indian Gover
 
 We trained a small language model — Qwen3-0.6B, 600 million parameters — using GRPO, a reinforcement learning algorithm, against this environment. The model started at a baseline reward of 0.31. After training, it reached a final reward of 0.75 — with a peak of 0.947 on the hardest cases. A 142% improvement. Not on a benchmark. On cases modeled after real children, real mothers, real nights in real villages.
 
-That number is not a benchmark. It is the difference between a model that sends a child with chest indrawing home to rest, and a model that asks the right question, identifies the danger sign, and says: refer immediately.
+It is the difference between a model that sends a child with chest indrawing home to rest, and a model that asks the right question, identifies the danger sign, and says: refer immediately.
 
 We built a multi-agent system where the AI plays two roles — the ASHA worker gathering information in the field, and the PHC doctor at the next level making the final call — to simulate the real handoff that happens when a case is too complex for one person to handle alone.
 
