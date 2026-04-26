@@ -17,7 +17,8 @@ short_description: AI clinical decision support for India's 1.07M ASHA workers
 **📓 Training Notebook (clean, re-runnable)**: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/asha_sahayak/training/asha_grpo_training.ipynb)  
 **📓 Run 2 — 200 steps with outputs**: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/asha_sahayak/training/asha_grpo_training_with_outputs_run2_200steps.ipynb)  
 **📓 Run 3 — 400 steps with outputs**: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sreenathmmenon/asha-sahayak/blob/main/asha_sahayak/training/asha_grpo_training_with_outputs_run3_400steps.ipynb)  
-**📝 Blog Post**: [BLOG.md](BLOG.md)
+**📝 Blog Post**: [BLOG.md](BLOG.md)  
+**📖 Demo Walkthrough**: [USAGE.md](USAGE.md)
 
 ---
 

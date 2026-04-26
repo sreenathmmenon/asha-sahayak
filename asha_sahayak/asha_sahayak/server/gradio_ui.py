@@ -179,6 +179,7 @@ def build_gradio_app() -> gr.Blocks:
                     height=380,
                 )
                 gr.Markdown("### Action JSON")
+                gr.Markdown("📖 New here? [How to use this demo + worked examples](https://github.com/sreenathmmenon/asha-sahayak/blob/main/asha_sahayak/USAGE.md)")
                 with gr.Row():
                     pending_btn = gr.Button("Ask Question Template", size="sm")
                     decision_btn = gr.Button("Final Decision Template", size="sm")
