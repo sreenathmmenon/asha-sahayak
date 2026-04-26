@@ -154,7 +154,7 @@ The world has noticed what India has built. And the world is trying to help.
 
 I am a technologist, not a doctor. I did not grow up in a village. I have never walked a forest path at midnight to reach a tribal family.
 
-I have spent years building software systems — the kind that process data at scale, that run quietly in the background while people go about their lives. For most of that time, I built things that made enterprises more efficient. Useful work. But not urgent work. Not the kind where the alternative is a child dying at 2 AM because the person standing at the door wasn't sure which question to ask next.
+I have spent my career building software systems — the kind that process data at scale, that run quietly in the background while people go about their lives. For most of that time, I built things that made enterprises more efficient. Useful work. But not urgent work. Not the kind where the alternative is a child dying at 2 AM because the person standing at the door wasn't sure which question to ask next.
 
 I became aware of the ASHA workers the way most urban Indians do — fragments. A news article about a strike. A statistic about maternal mortality. A photograph of women in saris sitting on a road somewhere, holding placards. I didn't stop to read. I scrolled past.
 
